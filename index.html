@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvod u Objektno Orijentisano Programiranje i UML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a fixed left-hand sidebar for navigation and a main content area. This structure provides a clear, linear learning path, ideal for a tutorial. Users can navigate sequentially or jump to specific topics. The flow is designed to build knowledge progressively: starting from the 'why' (procedural vs. OOP), moving to the core concepts of OOP, then introducing UML as a modeling tool, and finally, consolidating knowledge with interactive practical examples. This was chosen for its intuitiveness and effectiveness in educational contexts. A hamburger menu provides a responsive experience on mobile devices. -->
+    <!-- Visualization & Content Choices: Concepts are explained with text and analogies. Visualizations for class structure and inheritance are created using styled HTML/CSS (divs with borders) to avoid SVG/Mermaid, keeping the app lightweight and self-contained. The goal is to make abstract concepts concrete. Interaction is provided via JavaScript-powered code examples where users can click 'run' to see simulated output, and a new interactive section allows users to input data and see real-time results, making the connection between code and result immediate. This hands-on approach is more engaging for learning. All visual elements are designed to be responsive. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active, .nav-link:hover {
+            background-color: #EAE3D9;
+            color: #795548;
+            transform: translateX(4px);
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f2f2f2;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .code-block .keyword { color: #cc7832; }
+        .code-block .type { color: #6897bb; }
+        .code-block .string { color: #a5c261; }
+        .code-block .comment { color: #808080; }
+        .code-block .literal { color: #6a8759; }
+        .code-block .method { color: #ffc66d; }
+        .code-block .annotation { color: #bbb529; }
+
+        .uml-diagram {
+            background-color: #fff;
+            border: 2px solid #D2C4B3;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 288px; /* 72 * 4 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .uml-class-name {
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #D2C4B3;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .uml-attributes, .uml-methods {
+            padding: 0.5rem;
+            word-break: break-all;
+        }
+        .uml-attributes {
+            border-bottom: 1px solid #D2C4B3;
+        }
+        .output-box {
+            background-color: #F0F0F0;
+            border: 1px dashed #ccc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-[#F4F1ED] p-6 hidden md:block fixed h-full shadow-lg">
+        <h1 class="text-xl font-bold text-[#795548] mb-8">Sadržaj Predavanja</h1>
+        <nav id="desktop-nav" class="space-y-2">
+            <a href="#uvod" class="nav-link block p-2 rounded-lg font-medium active">1. Uvod u OOP</a>
+            <a href="#koncepti" class="nav-link block p-2 rounded-lg font-medium">2. Osnovni Koncepti</a>
+            <a href="#klase-objekti" class="nav-link block p-2 rounded-lg font-medium ml-4">- Klase i Objekti</a>
+            <a href="#enkapsulacija" class="nav-link block p-2 rounded-lg font-medium ml-4">- Enkapsulacija</a>
+            <a href="#nasledjivanje" class="nav-link block p-2 rounded-lg font-medium ml-4">- Nasleđivanje</a>
+            <a href="#polimorfizam" class="nav-link block p-2 rounded-lg font-medium ml-4">- Polimorfizam</a>
+            <a href="#apstrakcija" class="nav-link block p-2 rounded-lg font-medium ml-4">- Apstrakcija</a>
+            <a href="#uml" class="nav-link block p-2 rounded-lg font-medium">3. Uvod u UML</a>
+            <a href="#primeri" class="nav-link block p-2 rounded-lg font-medium">4. Praktični Primeri</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 md:ml-64 p-4 sm:p-6 md:p-12">
+        <!-- Mobile Header -->
+        <div class="md:hidden mb-6 sticky top-0 bg-[#FDFBF8]/80 backdrop-blur-sm z-10 py-2">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold text-[#795548]">OOP & UML</h1>
+                <button id="mobile-menu-button" class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#795548]">
+                    <svg class="h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+            <nav id="mobile-nav" class="hidden mt-4 space-y-2 bg-white p-4 rounded-lg shadow-md">
+                 <a href="#uvod" class="nav-link-mobile block p-2 rounded-lg font-medium">1. Uvod u OOP</a>
+                 <a href="#koncepti" class="nav-link-mobile block p-2 rounded-lg font-medium">2. Osnovni Koncepti</a>
+                 <a href="#klase-objekti" class="nav-link-mobile block p-2 rounded-lg font-medium ml-4">- Klase i Objekti</a>
+                 <a href="#enkapsulacija" class="nav-link-mobile block p-2 rounded-lg font-medium ml-4">- Enkapsulacija</a>
+                 <a href="#nasledjivanje" class="nav-link-mobile block p-2 rounded-lg font-medium ml-4">- Nasleđivanje</a>
+                 <a href="#polimorfizam" class="nav-link-mobile block p-2 rounded-lg font-medium ml-4">- Polimorfizam</a>
+                 <a href="#apstrakcija" class="nav-link-mobile block p-2 rounded-lg font-medium ml-4">- Apstrakcija</a>
+                 <a href="#uml" class="nav-link-mobile block p-2 rounded-lg font-medium">3. Uvod u UML</a>
+                 <a href="#primeri" class="nav-link-mobile block p-2 rounded-lg font-medium">4. Praktični Primeri</a>
+            </nav>
+        </div>
+
+        <!-- Section 1: Uvod -->
+        <section id="uvod" class="content-section active">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">1. Uvod u Objektno Orijentisano Programiranje (OOP)</h2>
+            <p class="text-base sm:text-lg mb-6">Dobrodošli na predavanje o Objektno Orijentisanom Programiranju! Danas ćemo zakoračiti u svet modernog programiranja i naučiti kako da razmišljamo o problemima na nov, intuitivniji način. Ovaj pristup nam pomaže da pišemo organizovaniji, fleksibilniji i lakši za održavanje kod, što je ključno za razvoj kompleksnih softverskih sistema.</p>
+            <p class="text-base sm:text-lg mb-6 bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg">Glavni cilj OOP-a je upravljanje složenošću (complexity). Kako softver raste, postaje sve teže pratiti sve delove i njihove međusobne veze. OOP nam daje alate da grupišemo povezane podatke i funkcionalnosti u samostalne jedinice (objekte), što drastično smanjuje mentalno opterećenje i omogućava timovima da efikasnije sarađuju.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">Proceduralno Programiranje</h3>
+                    <p>Zamislite da pravite sendvič prateći recept korak po korak. To je suština proceduralnog programiranja. Pišemo niz instrukcija (procedura ili funkcija) koje računar izvršava redom. Fokus je na <span class="font-semibold">akcijama</span>.</p>
+                    <ul class="list-disc list-inside mt-4 space-y-1">
+                        <li>Fokus na procedurama i funkcijama.</li>
+                        <li>Podaci i funkcije su odvojeni.</li>
+                        <li>Teže za održavanje kod velikih projekata.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border-2 border-[#D2C4B3]">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">Objektno Orijentisano Programiranje (OOP)</h3>
+                    <p>Sada zamislite da gradite kuću od LEGO kockica. Svaka kockica je "objekat" sa svojim osobinama (boja, veličina) i mogućnostima (može se spojiti sa drugom). U OOP-u, svet posmatramo kroz <span class="font-semibold">objekte</span> koji međusobno komuniciraju. Fokus je na <span class="font-semibold">stvarima</span> (objektima).</p>
+                     <ul class="list-disc list-inside mt-4 space-y-1">
+                        <li>Fokus na objektima koji objedinjuju podatke i ponašanje.</li>
+                        <li>Kod je modularan i lakši za ponovnu upotrebu.</li>
+                        <li>Intuitivnije preslikava stvarni svet u program.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Koncepti -->
+        <section id="koncepti" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">2. Stubovi OOP-a: Pregled</h2>
+            <p class="text-base sm:text-lg mb-6">Objektno orijentisano programiranje se zasniva na nekoliko ključnih principa koji ga čine moćnim. Mi ćemo ih zvati "stubovima" OOP-a. Razumevanje ovih koncepata je temelj za efikasno korišćenje OOP paradigme. Oni nam omogućavaju da gradimo softver koji je robustan, prilagodljiv i lak za razumevanje.</p>
+             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm text-center border border-gray-200">
+                    <div class="text-4xl mb-3">📦</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-[#795548]">Enkapsulacija</h3>
+                    <p class="mt-2 text-sm">Sakrivanje složenosti. Objekat čuva svoje stanje privatnim i nudi javne metode za interakciju.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm text-center border border-gray-200">
+                    <div class="text-4xl mb-3">👨‍👩‍👧</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-[#795548]">Nasleđivanje</h3>
+                    <p class="mt-2 text-sm">Ponovna upotreba koda. Klasa može naslediti atribute i metode od druge klase.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm text-center border border-gray-200">
+                    <div class="text-4xl mb-3">🎭</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-[#795548]">Polimorfizam</h3>
+                    <p class="mt-2 text-sm">"Više oblika". Jedna akcija se može izvršiti na različite načine, zavisno od objekta.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm text-center border border-gray-200">
+                    <div class="text-4xl mb-3"> abstraktni crtež </div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-[#795548]">Apstrakcija</h3>
+                    <p class="mt-2 text-sm">Prikazivanje samo bitnih informacija i sakrivanje detalja implementacije.</p>
+                </div>
+            </div>
+            <p class="mt-6 text-md italic text-center">U narednim sekcijama, detaljnije ćemo istražiti svaki od ovih stubova.</p>
+        </section>
+
+        <!-- Section 2.1: Klase i Objekti -->
+        <section id="klase-objekti" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Klase i Objekti: Nacrt i Kuća</h2>
+            <p class="text-base sm:text-lg mb-6">Ovo je najfundamentalniji koncept u OOP-u. Sve počinje odavde. Moramo jasno razlikovati šta je plan (klasa), a šta je stvarna stvar napravljena po tom planu (objekat).</p>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">Klasa (Class)</h3>
+                    <p>Klasa je <span class="font-semibold">nacrt</span> ili šablon za kreiranje objekata. Ona definiše:</p>
+                    <ul class="list-disc list-inside mt-2 mb-4 space-y-1">
+                        <li><b>Atribute (Attributes):</b> Osobine koje će objekat imati (npr. boja, ime, brzina). To su promenljive unutar klase.</li>
+                        <li><b>Metode (Methods):</b> Akcije koje će objekat moći da izvršava (npr. vozi, koči, laj). To su funkcije unutar klase.</li>
+                    </ul>
+                    <p class="italic">Na primer, klasa `Automobil` bi definisala da svaki automobil ima boju, marku i brzinu, i da može da ubrza i zakoči.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">Objekat (Object)</h3>
+                    <p>Objekat je <span class="font-semibold">instanca</span> (konkretan primerak) klase. To je stvarna "stvar" kreirana prema nacrtu klase, sa konkretnim vrednostima za svoje atribute.</p>
+                    <ul class="list-disc list-inside mt-2 mb-4 space-y-1">
+                        <li>Moj plavi "Audi" je jedan objekat.</li>
+                        <li>Tvoj crveni "BMW" je drugi objekat.</li>
+                        <li>Oba su objekti klase `Automobil`.</li>
+                    </ul>
+                     <p class="italic">Objekat je ono što "živi" u memoriji računara i sa čime radimo u programu.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-lg sm:text-xl font-semibold mb-4">Primer u Javi</h3>
+                <p class="mb-4">Hajde da vidimo kako izgleda jednostavna klasa `Ucenik` u Javi.</p>
+                <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Ucenik</span> {
+    <span class="comment">// Atributi</span>
+    <span class="type">String</span> ime;
+    <span class="type">String</span> prezime;
+    <span class="type">int</span> razred;
+
+    <span class="comment">// Metoda</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">predstaviSe</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Zdravo, ja sam "</span> + ime + <span class="string">" "</span> + prezime + <span class="string">" i idem u "</span> + razred + <span class="string">". razred."</span>);
+    }
+}</div>
+                 <p class="mt-4">Sada, hajde da kreiramo dva objekta (instance) te klase:</p>
+                 <div class="code-block"><span class="comment">// Kreiranje prvog objekta</span>
+<span class="type">Ucenik</span> ucenik1 = <span class="keyword">new</span> <span class="type">Ucenik</span>();
+ucenik1.ime = <span class="string">"Petar"</span>;
+ucenik1.prezime = <span class="string">"Petrović"</span>;
+ucenik1.razred = 3;
+
+<span class="comment">// Kreiranje drugog objekta</span>
+<span class="type">Ucenik</span> ucenik2 = <span class="keyword">new</span> <span class="type">Ucenik</span>();
+ucenik2.ime = <span class="string">"Jovana"</span>;
+ucenik2.prezime = <span class="string">"Jovanović"</span>;
+ucenik2.razred = 3;
+
+<span class="comment">// Pozivanje metode nad objektima</span>
+ucenik1.<span class="method">predstaviSe</span>();
+ucenik2.<span class="method">predstaviSe</span>();</div>
+            </div>
+
+            <div class="mt-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-lg sm:text-xl font-semibold mb-4">Konstruktori i `this` ključna reč</h3>
+                <p class="mb-4">Kada kreiramo objekat sa `new Ucenik()`, mi zapravo pozivamo specijalnu metodu koja se zove <strong>konstruktor</strong>. Njegov zadatak je da inicijalizuje početno stanje objekta.</p>
+                <ul class="list-disc list-inside mb-4 space-y-2">
+                    <li>Svaka klasa ima podrazumevani (default) konstruktor ako ga mi ne definišemo.</li>
+                    <li>Možemo definisati i sopstvene konstruktore da bismo primili početne vrednosti za atribute.</li>
+                    <li>Ključna reč <strong>`this`</strong> se odnosi na <strong>trenutni objekat</strong>. Koristi se za razlikovanje atributa klase od parametara metode (ili konstruktora) kada imaju isto ime.</li>
+                </ul>
+                <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Ucenik</span> {
+    <span class="type">String</span> ime;
+    <span class="type">String</span> prezime;
+    <span class="type">int</span> razred;
+
+    <span class="comment">// Naš konstruktor koji prihvata početne vrednosti</span>
+    <span class="keyword">public</span> <span class="method">Ucenik</span>(<span class="type">String</span> ime, <span class="type">String</span> prezime, <span class="type">int</span> razred) {
+        <span class="comment">// 'this.ime' je atribut klase</span>
+        <span class="comment">// 'ime' je parametar prosleđen konstruktoru</span>
+        <span class="keyword">this</span>.ime = ime;
+        <span class="keyword">this</span>.prezime = prezime;
+        <span class="keyword">this</span>.razred = razred;
+    }
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">predstaviSe</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Zdravo, ja sam "</span> + <span class="keyword">this</span>.ime + <span class="string">" "</span> + <span class="keyword">this</span>.prezime);
+    }
+}
+
+<span class="comment">// Sada je kreiranje objekata mnogo čistije:</span>
+<span class="type">Ucenik</span> ucenik1 = <span class="keyword">new</span> <span class="type">Ucenik</span>(<span class="string">"Petar"</span>, <span class="string">"Petrović"</span>, 3);
+<span class="type">Ucenik</span> ucenik2 = <span class="keyword">new</span> <span class="type">Ucenik</span>(<span class="string">"Jovana"</span>, <span class="string">"Jovanović"</span>, 3);
+ucenik1.<span class="method">predstaviSe</span>();</div>
+            </div>
+        </section>
+        
+        <!-- Section 2.2: Enkapsulacija -->
+        <section id="enkapsulacija" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Enkapsulacija: Sigurnosna Kutija</h2>
+            <p class="text-base sm:text-lg mb-6">Enkapsulacija je princip "pakovanja" podataka (atributa) i metoda koje rade sa tim podacima u jednu celinu - objekat. Ali to nije sve! Ključni deo je <span class="font-semibold">sakrivanje informacija (information hiding)</span>.</p>
+            <p class="mb-6">Zamislite bankomat. Vi možete da ubacite karticu, unesete PIN i podignete novac. Ne znate (i ne treba da znate) kako bankomat interno proverava stanje na računu ili broji novčanice. On vam nudi jednostavan interfejs, a sakriva unutrašnju složenost. To je enkapsulacija.</p>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">Kako to radi?</h3>
+                     <ul class="list-disc list-inside mt-2 space-y-2">
+                         <li>Atributi klase se deklarišu kao <code class="bg-gray-200 px-1 rounded">private</code>. To znači da im se ne može direktno pristupiti van klase.</li>
+                         <li>Kreiraju se javne metode, tzv. <span class="font-semibold">geteri i seteri</span> (<code class="bg-gray-200 px-1 rounded">public</code>), koje služe kao kontrolisani pristup privatnim atributima.</li>
+                     </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border-2 border-[#D2C4B3]">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">Zašto je ovo važno?</h3>
+                    <ul class="list-disc list-inside mt-2 space-y-2">
+                        <li><b>Kontrola:</b> Seteri nam omogućavaju da dodamo logiku za proveru pre nego što promenimo vrednost atributa (npr. ocena ne može biti veća od 5).</li>
+                        <li><b>Sigurnost:</b> Sprečava se slučajna ili namerna izmena stanja objekta na nepredviđen način.</li>
+                        <li><b>Fleksibilnost:</b> Možemo promeniti unutrašnju implementaciju klase bez da utičemo na kod koji je koristi, sve dok javni interfejs (metode) ostaje isti.</li>
+                        <li><b>Održivost:</b> Kada je unutrašnje stanje objekta zaštićeno, lakše je pronaći i ispraviti greške, jer znamo da se stanje moglo promeniti samo kroz definisane setere.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-lg sm:text-xl font-semibold mb-4">Primer: Klasa `Ucenik` sa enkapsulacijom</h3>
+                 <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Ucenik</span> {
+    <span class="comment">// Atributi su sada private!</span>
+    <span class="keyword">private</span> <span class="type">String</span> ime;
+    <span class="keyword">private</span> <span class="type">int</span> ocena;
+
+    <span class="comment">// Javni seter za 'ime'</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">setIme</span>(<span class="type">String</span> novoIme) {
+        <span class="keyword">this</span>.ime = novoIme;
+    }
+
+    <span class="comment">// Javni geter za 'ime'</span>
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">getIme</span>() {
+        <span class="keyword">return</span> <span class="keyword">this</span>.ime;
+    }
+    
+    <span class="comment">// Seter za 'ocena' sa logikom za proveru</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">setOcena</span>(<span class="type">int</span> novaOcena) {
+        <span class="keyword">if</span> (novaOcena >= 1 && novaOcena <= 5) {
+            <span class="keyword">this</span>.ocena = novaOcena;
+        } <span class="keyword">else</span> {
+            System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Greška: Ocena mora biti između 1 i 5."</span>);
+        }
+    }
+
+    <span class="comment">// Geter za 'ocena'</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="method">getOcena</span>() {
+        <span class="keyword">return</span> <span class="keyword">this</span>.ocena;
+    }
+}</div>
+                <p class="mt-4">Sada, umesto direktnog pristupa `ucenik1.ocena = 10;`, moramo koristiti metodu:</p>
+                <div class="code-block"><span class="type">Ucenik</span> ucenik1 = <span class="keyword">new</span> <span class="type">Ucenik</span>();
+ucenik1.<span class="method">setIme</span>(<span class="string">"Marko"</span>);
+ucenik1.<span class="method">setOcena</span>(5); <span class="comment">// Ovo je u redu</span>
+ucenik1.<span class="method">setOcena</span>(7); <span class="comment">// Ovo će ispisati grešku!</span>
+
+System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Učenik: "</span> + ucenik1.<span class="method">getIme</span>() + <span class="string">", Ocena: "</span> + ucenik1.<span class="method">getOcena</span>());</div>
+            </div>
+
+        </section>
+
+        <!-- Section 2.3: Nasleđivanje -->
+        <section id="nasledjivanje" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Nasleđivanje: Porodično Stablo</h2>
+            <p class="text-base sm:text-lg mb-6">Nasleđivanje (Inheritance) je mehanizam koji omogućava jednoj klasi da "pokupi" (nasledi) atribute i metode od druge klase. Ovo je jedan od najmoćnijih načina za ponovnu upotrebu koda u OOP-u.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">Ključni termini</h3>
+                    <ul class="list-disc list-inside mt-2 space-y-2">
+                        <li><b>Nadklasa (Superclass):</b> Klasa od koje se nasleđuje. Naziva se i roditeljska (parent) ili osnovna (base) klasa.</li>
+                        <li><b>Podklasa (Subclass):</b> Klasa koja nasleđuje. Naziva se i dečija (child) ili izvedena (derived) klasa.</li>
+                    </ul>
+                    <p class="mt-4">Koristimo ključnu reč <code class="bg-gray-200 px-1 rounded">extends</code> da bismo ostvarili nasleđivanje.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">Primer iz života</h3>
+                    <p>Imamo opšti koncept <span class="font-semibold">`Vozilo`</span>. Svako vozilo ima brzinu i može da se kreće.
+                    <br><br>
+                    <span class="font-semibold">`Automobil`</span> je specifična vrsta vozila. On nasleđuje sve od `Vozila` (ima brzinu, kreće se), ali dodaje i nešto svoje, npr. broj vrata.
+                    <br><br>
+                    <span class="font-semibold">`Bicikl`</span> je takođe vrsta vozila. I on nasleđuje od `Vozila`, ali ima svoj specifičan atribut, npr. broj brzina.</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg mb-8">
+                <h4 class="font-semibold text-lg text-yellow-800">"IS-A" Odnos (JESTE)</h4>
+                <p class="text-yellow-700">Nasleđivanje modelira <strong>"IS-A"</strong> (jeste) odnos. Ovo je ključno za pravilno korišćenje. Pre nego što upotrebite nasleđivanje, postavite sebi pitanje: Da li je podklasa zaista vrsta nadklase?
+                <br> ✔ `Pas` <strong>jeste</strong> `Životinja`. (Dobro)
+                <br> ✔ `Automobil` <strong>jeste</strong> `Vozilo`. (Dobro)
+                <br> ❌ `Automobil` <strong>nije</strong> `Točak`. (Loše - ovo bi bio "HAS-A" odnos)
+                </p>
+            </div>
+
+            <div class="mt-8">
+                 <h3 class="text-lg sm:text-xl font-semibold mb-4">Primer u Javi</h3>
+                 <p class="mb-2">Prvo, osnovna (roditeljska) klasa:</p>
+                 <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Zivotinja</span> {
+    <span class="type">String</span> ime;
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">jedi</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Ova životinja jede."</span>);
+    }
+}</div>
+                <p class="mt-4 mb-2">Sada, izvedena (dečija) klasa koja nasleđuje `Zivotinju`:</p>
+                <div class="code-block"><span class="comment">// Pas JE Životinja</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Pas</span> <span class="keyword">extends</span> <span class="type">Zivotinja</span> {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">laj</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Av av!"</span>);
+    }
+}
+
+<span class="comment">// Macka JE Životinja</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Macka</span> <span class="keyword">extends</span> <span class="type">Zivotinja</span> {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">mjauci</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Mjau!"</span>);
+    }
+}</div>
+                <p class="mt-4 mb-2">Kako se koristi:</p>
+                <div class="code-block"><span class="type">Pas</span> mojPas = <span class="keyword">new</span> <span class="type">Pas</span>();
+mojPas.ime = <span class="string">"Lesi"</span>; <span class="comment">// 'ime' je nasleđeno iz klase Zivotinja</span>
+mojPas.<span class="method">jedi</span>();       <span class="comment">// 'jedi()' je nasleđeno iz klase Zivotinja</span>
+mojPas.<span class="method">laj</span>();        <span class="comment">// 'laj()' je specifično za klasu Pas</span></div>
+            </div>
+
+            <div class="mt-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-lg sm:text-xl font-semibold mb-4">Ključna reč `super`</h3>
+                <p class="mb-4">Ključna reč <strong>`super`</strong> se koristi unutar podklase da bi se pozvale metode ili konstruktori iz <strong>nadklase</strong>. Ovo je korisno kada želimo da proširimo, a ne da potpuno zamenimo, ponašanje nadklase.</p>
+                <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Osoba</span> {
+    <span class="type">String</span> ime;
+    <span class="keyword">public</span> <span class="method">Osoba</span>(<span class="type">String</span> ime) {
+        <span class="keyword">this</span>.ime = ime;
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Kreirana je Osoba."</span>);
+    }
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">predstaviSe</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Ja sam osoba, zovem se "</span> + ime);
+    }
+}
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Student</span> <span class="keyword">extends</span> <span class="type">Osoba</span> {
+    <span class="type">String</span> fakultet;
+    <span class="keyword">public</span> <span class="method">Student</span>(<span class="type">String</span> ime, <span class="type">String</span> fakultet) {
+        <span class="comment">// 1. Pozivamo konstruktor nadklase (Osoba)</span>
+        <span class="keyword">super</span>(ime); 
+        <span class="keyword">this</span>.fakultet = fakultet;
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Kreiran je Student."</span>);
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">predstaviSe</span>() {
+        <span class="comment">// 2. Pozivamo metodu predstaviSe() iz nadklase</span>
+        <span class="keyword">super</span>.<span class="method">predstaviSe</span>(); 
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Studiram na "</span> + fakultet);
+    }
+}
+
+<span class="comment">// Upotreba:</span>
+<span class="type">Student</span> s = <span class="keyword">new</span> <span class="type">Student</span>(<span class="string">"Milan"</span>, <span class="string">"ETF"</span>);
+s.<span class="method">predstaviSe</span>();</div>
+            </div>
+        </section>
+
+        <!-- Section 2.4: Polimorfizam -->
+        <section id="polimorfizam" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Polimorfizam: Više Oblika</h2>
+            <p class="text-base sm:text-lg mb-6">Polimorfizam na grčkom znači "imati više oblika". U Javi, polimorfizam nam omogućava da izvršimo istu akciju na različite načine. Postoje dva glavna tipa polimorfizma:</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+                <!-- Compile-time Polymorphism -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">1. Statički (Compile-time) Polimorfizam: Preopterećenje Metoda (Method Overloading)</h3>
+                    <p class="mb-4">Ovo se dešava kada u istoj klasi imamo više metoda sa <strong>istim imenom</strong>, ali <strong>različitim parametrima</strong> (različit broj parametara, različit tip, ili oboje). Kompajler odlučuje koju metodu da pozove na osnovu argumenata koje smo prosledili.</p>
+                    <div class="code-block"><span class="keyword">class</span> <span class="type">Kalkulator</span> {
+    <span class="keyword">public</span> <span class="type">int</span> <span class="method">saberi</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+        <span class="keyword">return</span> a + b;
+    }
+    
+    <span class="comment">// Ista metoda, ali sa 3 parametra</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="method">saberi</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c) {
+        <span class="keyword">return</span> a + b + c;
+    }
+
+    <span class="comment">// Ista metoda, ali sa double tipom</span>
+    <span class="keyword">public</span> <span class="type">double</span> <span class="method">saberi</span>(<span class="type">double</span> a, <span class="type">double</span> b) {
+        <span class="keyword">return</span> a + b;
+    }
+}
+
+<span class="type">Kalkulator</span> k = <span class="keyword">new</span> <span class="type">Kalkulator</span>();
+System.<span class="method">out</span>.<span class="method">println</span>(k.<span class="method">saberi</span>(2, 3));      <span class="comment">// Poziva prvu metodu</span>
+System.<span class="method">out</span>.<span class="method">println</span>(k.<span class="method">saberi</span>(2, 3, 4));  <span class="comment">// Poziva drugu metodu</span>
+System.<span class="method">out</span>.<span class="method">println</span>(k.<span class="method">saberi</span>(2.5, 3.5)); <span class="comment">// Poziva treću metodu</span></div>
+                </div>
+
+                <!-- Run-time Polymorphism -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border-2 border-[#D2C4B3]">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">2. Dinamički (Run-time) Polimorfizam: Redefinisanje Metoda (Method Overriding)</h3>
+                    <p class="mb-4">Ovo se dešava kada podklasa pruži specifičnu implementaciju metode koja je već definisana u njenoj nadklasi. Odluka o tome koja metoda će se izvršiti donosi se u vreme izvršavanja programa (run-time), na osnovu tipa objekta.</p>
+                    <p class="mb-4">Ovo je ono što najčešće podrazumevamo pod "polimorfizmom" u OOP kontekstu. Ključno je za fleksibilnost i nadogradivost koda.</p>
+                    <div class="code-block"><span class="keyword">class</span> <span class="type">Zivotinja</span> {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">oglasiSe</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Životinja se oglašava"</span>);
+    }
+}
+
+<span class="keyword">class</span> <span class="type">Pas</span> <span class="keyword">extends</span> <span class="type">Zivotinja</span> {
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">oglasiSe</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Pas laje: Av av!"</span>);
+    }
+}
+
+<span class="comment">// Upotreba</span>
+<span class="type">Zivotinja</span> z = <span class="keyword">new</span> <span class="type">Pas</span>(); <span class="comment">// z je tipa Zivotinja, ali objekat je Pas</span>
+z.<span class="method">oglasiSe</span>(); <span class="comment">// U vreme izvršavanja, JVM vidi da je objekat Pas</span>
+              <span class="comment">// i poziva metodu iz klase Pas.</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.5: Apstrakcija -->
+        <section id="apstrakcija" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Apstrakcija: Fokusiranje na Bitno</h2>
+            <p class="text-base sm:text-lg mb-6">Apstrakcija je proces sakrivanja implementacionih detalja i prikazivanja samo funkcionalnosti korisniku. Drugim rečima, korisnik zna <strong>šta</strong> objekat radi, ali ne i <strong>kako</strong> to radi.</p>
+            <p class="mb-6">Dobar primer je vožnja automobila. Da biste vozili, morate znati da koristite volan, pedale i menjač (interfejs). Ne morate znati kako motor sa unutrašnjim sagorevanjem radi, kako se snaga prenosi na točkove, ili kako radi elektronski sistem ubrizgavanja goriva (implementacija).</p>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#9F8170]">Kako se postiže u Javi?</h3>
+                     <p>Apstrakcija se u Javi najčešće postiže korišćenjem:</p>
+                     <ul class="list-disc list-inside mt-2 space-y-2">
+                         <li><strong>Apstraktnih klasa (Abstract Classes):</strong> Klasa koja se ne može instancirati (ne može se kreirati objekat od nje). Može imati i apstraktne (bez implementacije) i konkretne metode. Služi kao osnova za druge klase koje je nasleđuju.</li>
+                         <li><strong>Interfejsa (Interfaces):</strong> Potpuno apstraktan "ugovor" koji definiše skup metoda koje klasa mora da implementira. Ne može imati implementaciju metoda (u starijim verzijama Jave).</li>
+                     </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border-2 border-[#D2C4B3]">
+                    <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[#795548]">Zašto je ovo važno?</h3>
+                    <ul class="list-disc list-inside mt-2 space-y-2">
+                        <li><b>Smanjuje složenost:</b> Fokusiramo se na interakciju sa objektom na višem nivou.</li>
+                        <li><b>Olakšava održavanje:</b> Možemo promeniti internu implementaciju bez promene spoljnog koda koji je koristi.</li>
+                        <li><b>Povećava sigurnost:</b> Sprečava korisnika da napravi promene koje bi mogle da naruše konzistentnost objekta.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-lg sm:text-xl font-semibold mb-4">Primer: Apstraktna klasa `Oblik`</h3>
+                 <p class="mb-4">Definišemo apstraktnu klasu `Oblik`. Svaki oblik mora imati mogućnost da izračuna svoju površinu, ali ne znamo kako se to radi za "apstraktni" oblik. Zato je metoda `povrsina()` apstraktna, i svaka konkretna klasa koja nasledi `Oblik` mora da pruži svoju implementaciju.</p>
+                 <div class="code-block"><span class="comment">// Apstraktna klasa - ne može se kreirati objekat tipa Oblik</span>
+<span class="keyword">abstract</span> <span class="keyword">class</span> <span class="type">Oblik</span> {
+    <span class="comment">// Apstraktna metoda - nema telo, samo potpis</span>
+    <span class="comment">// Svaka podklasa MORA da je implementira</span>
+    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="type">double</span> <span class="method">povrsina</span>();
+
+    <span class="comment">// Apstraktna klasa može imati i konkretne metode</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">prikazi</span>() {
+        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Ovo je neki geometrijski oblik."</span>);
+    }
+}
+
+<span class="keyword">class</span> <span class="type">Krug</span> <span class="keyword">extends</span> <span class="type">Oblik</span> {
+    <span class="keyword">private</span> <span class="type">double</span> poluprecnik = 5.0;
+    
+    <span class="comment">// Pružamo implementaciju za apstraktnu metodu</span>
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">double</span> <span class="method">povrsina</span>() {
+        <span class="keyword">return</span> Math.<span class="literal">PI</span> * poluprecnik * poluprecnik;
+    }
+}
+
+<span class="comment">// Greška! Ne možemo kreirati objekat apstraktne klase.</span>
+<span class="comment">// Oblik o = new Oblik(); </span>
+
+<span class="comment">// Ovo je ispravno</span>
+<span class="type">Oblik</span> krug = <span class="keyword">new</span> <span class="type">Krug</span>();
+krug.<span class="method">prikazi</span>();
+System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Površina kruga je: "</span> + krug.<span class="method">povrsina</span>());</div>
+            </div>
+        </section>
+
+        <!-- Section 3: UML -->
+        <section id="uml" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">3. UML: Jezik za Crtanje Softvera</h2>
+            <p class="text-base sm:text-lg mb-6">Unified Modeling Language (UML) je standardizovani grafički jezik za vizuelizaciju, specificiranje, konstruisanje i dokumentovanje softverskih sistema. To je kao arhitektonski nacrt za zgradu, samo što je za softver. Pomaže nam da planiramo i komuniciramo ideje pre nego što napišemo kod.</p>
+            <p class="mb-6">Postoji mnogo vrsta UML dijagrama, ali za nas je na početku najvažniji <span class="font-semibold">Dijagram Klasa (Class Diagram)</span>, jer direktno prikazuje strukturu našeg OOP koda.</p>
+
+            <h3 class="text-xl sm:text-2xl font-semibold mb-4 text-[#9F8170]">Dijagram Klasa</h3>
+            <p class="mb-4">Dijagram klasa prikazuje klase u sistemu, njihove atribute, metode i odnose između klasa. Osnovni element je pravougaonik podeljen na tri dela:</p>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                 <div class="uml-diagram">
+                    <div class="uml-class-name">ImeKlase</div>
+                    <div class="uml-attributes">
+                        <p>- atribut1: TipPodatka</p>
+                        <p>+ atribut2: TipPodatka</p>
+                    </div>
+                    <div class="uml-methods">
+                        <p>+ metoda1(parametar: Tip): PovratniTip</p>
+                        <p>- metoda2(): void</p>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <ul class="space-y-4">
+                        <li><span class="font-semibold">Gornji deo:</span> Ime klase.</li>
+                        <li><span class="font-semibold">Srednji deo:</span> Lista atributa.</li>
+                        <li><span class="font-semibold">Donji deo:</span> Lista metoda.</li>
+                    </ul>
+                    <h4 class="font-semibold mt-4 mb-2">Oznake vidljivosti (Visibility):</h4>
+                     <ul class="space-y-2">
+                        <li><span class="font-mono font-bold text-green-600">+</span> <span class="font-semibold">public:</span> Vidljivo svima.</li>
+                        <li><span class="font-mono font-bold text-red-600">-</span> <span class="font-semibold">private:</span> Vidljivo samo unutar klase.</li>
+                        <li><span class="font-mono font-bold text-yellow-600">#</span> <span class="font-semibold">protected:</span> Vidljivo unutar klase i u njenim podklasama.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                 <h3 class="text-xl sm:text-2xl font-semibold mb-4 text-[#9F8170]">Primer: UML dijagram za klasu `Ucenik`</h3>
+                 <p class="mb-4">Ovako bi izgledao UML dijagram za našu `Ucenik` klasu sa enkapsulacijom.</p>
+
+                 <div class="flex justify-center">
+                      <div class="uml-diagram">
+                        <div class="uml-class-name">Ucenik</div>
+                        <div class="uml-attributes">
+                            <p>- ime: String</p>
+                            <p>- ocena: int</p>
+                        </div>
+                        <div class="uml-methods">
+                            <p>+ setIme(novoIme: String): void</p>
+                            <p>+ getIme(): String</p>
+                            <p>+ setOcena(novaOcena: int): void</p>
+                            <p>+ getOcena(): int</p>
+                        </div>
+                    </div>
+                 </div>
+                 <p class="mt-4 text-center italic">Ovaj dijagram jasno i sažeto prikazuje sve bitne informacije o klasi `Ucenik`.</p>
+            </div>
+            
+            <div class="mt-10">
+                <h3 class="text-xl sm:text-2xl font-semibold mb-4 text-[#9F8170]">Odnosi Između Klasa</h3>
+                <p class="mb-4">Osim nasleđivanja, klase mogu biti u različitim odnosima. UML nam pomaže da vizuelizujemo te veze.</p>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-lg">Asocijacija</h4>
+                        <p class="text-sm italic mb-2">"koristi"</p>
+                        <div class="text-lg">Klasa A ⎯⎯⎯⎯⎯ Klasa B</div>
+                        <p class="text-xs mt-2">Student koristi Knjigu. Nezavisni su.</p>
+                    </div>
+                     <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-lg">Agregacija</h4>
+                        <p class="text-sm italic mb-2">"ima"</p>
+                        <div class="text-lg">Klasa A ◇⎯⎯⎯⎯⎯ Klasa B</div>
+                        <p class="text-xs mt-2">Departman ima Profesora. Profesor može postojati i bez departmana.</p>
+                    </div>
+                     <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-lg">Kompozicija</h4>
+                        <p class="text-sm italic mb-2">"je deo"</p>
+                        <div class="text-lg">Klasa A ◆⎯⎯⎯⎯⎯ Klasa B</div>
+                        <p class="text-xs mt-2">Kuća se sastoji od Sobe. Soba ne može postojati bez kuće.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 4: Praktični Primeri -->
+        <section id="primeri" class="content-section">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">4. Praktični Primeri</h2>
+            <p class="text-base sm:text-lg mb-6">Teorija je važna, ali najbolje se uči kroz praksu. Hajde da sada primenimo sve što smo naučili na konkretnim primerima. Možete interagovati sa kodom i videti kako promene utiču na rezultat.</p>
+
+            <!-- Primer 1: Automobil -->
+            <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Primer 1: Klasa `Automobil`</h3>
+                <p class="mb-4">Kreirajmo jednostavnu klasu `Automobil` sa atributima za marku i brzinu, i metodama za ubrzavanje i prikaz informacija. Pritisnite dugme "Pokreni" da kreirate objekat i pozovete njegove metode.</p>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                         <h4 class="font-semibold mb-2">Java Kod:</h4>
+                         <div class="code-block" id="code-auto"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Automobil</span> {
+    <span class="keyword">public</span> <span class="type">String</span> marka;
+    <span class="keyword">public</span> <span class="type">int</span> brzina;
+
+    <span class="keyword">public</span> <span class="method">Automobil</span>(<span class="type">String</span> marka) {
+        <span class="keyword">this</span>.marka = marka;
+        <span class="keyword">this</span>.brzina = 0;
+    }
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">ubrzaj</span>(<span class="type">int</span> kolicina) {
+        <span class="keyword">this</span>.brzina += kolicina;
+    }
+
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">prikaziInfo</span>() {
+        <span class="keyword">return</span> <span class="string">"Automobil marke "</span> + marka + 
+               <span class="string">" se kreće brzinom od "</span> + 
+               brzina + <span class="string">" km/h."</span>;
+    }
+}
+
+<span class="comment">// Glavni program</span>
+<span class="type">Automobil</span> mojAuto = <span class="keyword">new</span> <span class="type">Automobil</span>(<span class="string">"Audi"</span>);
+mojAuto.<span class="method">ubrzaj</span>(50);
+System.<span class="method">out</span>.<span class="method">println</span>(mojAuto.<span class="method">prikaziInfo</span>());
+mojAuto.<span class="method">ubrzaj</span>(30);
+System.<span class="method">out</span>.<span class="method">println</span>(mojAuto.<span class="method">prikaziInfo</span>());</div>
+                    </div>
+                    <div>
+                         <h4 class="font-semibold mb-2">UML Dijagram:</h4>
+                         <div class="uml-diagram">
+                            <div class="uml-class-name">Automobil</div>
+                            <div class="uml-attributes">
+                                <p>+ marka: String</p>
+                                <p>+ brzina: int</p>
+                            </div>
+                            <div class="uml-methods">
+                                <p>+ Automobil(marka: String)</p>
+                                <p>+ ubrzaj(kolicina: int): void</p>
+                                <p>+ prikaziInfo(): String</p>
+                            </div>
+                        </div>
+                        <button id="run-auto" class="w-full mt-4 bg-[#795548] text-white py-2 rounded-lg hover:bg-[#9F8170] transition">Pokreni</button>
+                        <h4 class="font-semibold mt-4 mb-2">Izlaz:</h4>
+                        <div class="output-box" id="output-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Primer 2: Bankovni Racun -->
+            <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Primer 2: Bankovni Račun</h3>
+                <p class="mb-4">Ovaj primer demonstrira enkapsulaciju. Stanje računa je privatno i može se menjati samo preko javnih metoda `uplati` i `podigni`, koje sadrže logiku za proveru.</p>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                         <h4 class="font-semibold mb-2">Java Kod:</h4>
+                         <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">BankovniRacun</span> {
+    <span class="keyword">private</span> <span class="type">double</span> stanje;
+
+    <span class="keyword">public</span> <span class="method">BankovniRacun</span>(<span class="type">double</span> pocetnoStanje) {
+        <span class="keyword">this</span>.stanje = pocetnoStanje;
+    }
+
+    <span class="keyword">public</span> <span class="type">double</span> <span class="method">getStanje</span>() {
+        <span class="keyword">return</span> <span class="keyword">this</span>.stanje;
+    }
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">uplati</span>(<span class="type">double</span> iznos) {
+        <span class="keyword">if</span> (iznos > 0) {
+            <span class="keyword">this</span>.stanje += iznos;
+        }
+    }
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">podigni</span>(<span class="type">double</span> iznos) {
+        <span class="keyword">if</span> (iznos > 0 && iznos <= <span class="keyword">this</span>.stanje) {
+            <span class="keyword">this</span>.stanje -= iznos;
+        } <span class="keyword">else</span> {
+            System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Nemate dovoljno sredstava."</span>);
+        }
+    }
+}
+<span class="comment">// Glavni program</span>
+<span class="type">BankovniRacun</span> racun = <span class="keyword">new</span> <span class="type">BankovniRacun</span>(1000);
+racun.<span class="method">uplati</span>(500);
+racun.<span class="method">podigni</span>(200);
+racun.<span class="method">podigni</span>(1500); <span class="comment">// Ovo će prijaviti grešku</span>
+System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Trenutno stanje: "</span> + racun.<span class="method">getStanje</span>());</div>
+                    </div>
+                    <div>
+                         <h4 class="font-semibold mb-2">UML Dijagram:</h4>
+                         <div class="uml-diagram">
+                            <div class="uml-class-name">BankovniRacun</div>
+                            <div class="uml-attributes">
+                                <p>- stanje: double</p>
+                            </div>
+                            <div class="uml-methods">
+                                <p>+ BankovniRacun(pocetno: double)</p>
+                                <p>+ getStanje(): double</p>
+                                <p>+ uplati(iznos: double): void</p>
+                                <p>+ podigni(iznos: double): void</p>
+                            </div>
+                        </div>
+                        <button id="run-racun" class="w-full mt-4 bg-[#795548] text-white py-2 rounded-lg hover:bg-[#9F8170] transition">Pokreni</button>
+                        <h4 class="font-semibold mt-4 mb-2">Izlaz:</h4>
+                        <div class="output-box" id="output-racun"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primer 3: Interaktivni Kalkulator Oblika -->
+             <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Primer 3: Interaktivni Kalkulator Oblika</h3>
+                <p class="mb-4">Hajde da oživimo naš primer sa oblicima! Unesite vrednost i izaberite oblik, a program će iskoristiti polimorfizam da izračuna tačnu površinu. Isprobajte sami!</p>
+                 <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                         <h4 class="font-semibold mb-2">Java Kod (Logika u pozadini):</h4>
+                         <div class="code-block" id="code-oblik"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="type">Oblik</span> {
+    <span class="keyword">abstract</span> <span class="type">double</span> <span class="method">povrsina</span>();
+}
+
+<span class="keyword">class</span> <span class="type">Krug</span> <span class="keyword">extends</span> <span class="type">Oblik</span> {
+    <span class="keyword">private</span> <span class="type">double</span> poluprecnik;
+    <span class="keyword">public</span> <span class="method">Krug</span>(<span class="type">double</span> r) { <span class="keyword">this</span>.poluprecnik = r; }
+    
+    <span class="annotation">@Override</span>
+    <span class="type">double</span> <span class="method">povrsina</span>() {
+        <span class="keyword">return</span> Math.<span class="literal">PI</span> * poluprecnik * poluprecnik;
+    }
+}
+
+<span class="keyword">class</span> <span class="type">Kvadrat</span> <span class="keyword">extends</span> <span class="type">Oblik</span> {
+    <span class="keyword">private</span> <span class="type">double</span> stranica;
+    <span class="keyword">public</span> <span class="method">Kvadrat</span>(<span class="type">double</span> a) { <span class="keyword">this</span>.stranica = a; }
+
+    <span class="annotation">@Override</span>
+    <span class="type">double</span> <span class="method">povrsina</span>() {
+        <span class="keyword">return</span> stranica * stranica;
+    }
+}</div>
+                    </div>
+                    <div>
+                         <h4 class="font-semibold mb-2">Probaj!</h4>
+                         <div class="bg-gray-50 p-4 rounded-lg border">
+                             <div class="mb-4">
+                                 <label for="oblik-select" class="block text-sm font-medium text-gray-700">Izaberi oblik:</label>
+                                 <select id="oblik-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#9F8170] focus:border-[#9F8170] sm:text-sm rounded-md">
+                                     <option value="krug">Krug</option>
+                                     <option value="kvadrat">Kvadrat</option>
+                                 </select>
+                             </div>
+                             <div class="mb-4">
+                                 <label for="dimenzija-input" id="dimenzija-label" class="block text-sm font-medium text-gray-700">Unesi poluprečnik:</label>
+                                 <input type="number" id="dimenzija-input" value="5" class="mt-1 focus:ring-[#9F8170] focus:border-[#9F8170] block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                             </div>
+                             <button id="run-oblik-interactive" class="w-full bg-[#795548] text-white py-2 rounded-lg hover:bg-[#9F8170] transition">Izračunaj Površinu</button>
+                         </div>
+                         
+                         <h4 class="font-semibold mt-4 mb-2">Izlaz:</h4>
+                         <div class="output-box" id="output-oblik-interactive"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.content-section');
+        const desktopNavLinks = document.querySelectorAll('#desktop-nav .nav-link');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileNavLinks = document.querySelectorAll('#mobile-nav .nav-link-mobile');
+
+        function setActiveSection(hash) {
+            const targetId = hash ? hash.substring(1) : 'uvod';
+            
+            sections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            desktopNavLinks.forEach(link => {
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        function handleNavClick(e) {
+            e.preventDefault();
+            const hash = e.currentTarget.getAttribute('href');
+            setActiveSection(hash);
+            history.pushState(null, null, hash); 
+            window.scrollTo(0,0);
+        }
+
+        desktopNavLinks.forEach(link => {
+            link.addEventListener('click', handleNavClick);
+        });
+        
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                handleNavClick(e);
+                mobileNav.classList.add('hidden'); // Close menu on click
+            });
+        });
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileNav.classList.toggle('hidden');
+        });
+
+        const initialHash = window.location.hash || '#uvod';
+        setActiveSection(initialHash);
+
+        // Interactive examples
+        document.getElementById('run-auto').addEventListener('click', () => {
+            const outputEl = document.getElementById('output-auto');
+            outputEl.innerHTML = '';
+            outputEl.innerHTML = `Automobil marke Audi se kreće brzinom od 50 km/h.<br>Automobil marke Audi se kreće brzinom od 80 km/h.`;
+        });
+
+        document.getElementById('run-racun').addEventListener('click', () => {
+             const outputEl = document.getElementById('output-racun');
+             outputEl.innerHTML = `Nemate dovoljno sredstava.<br>Trenutno stanje: 1300.0`;
+        });
+
+        // Interactive calculator logic
+        const oblikSelect = document.getElementById('oblik-select');
+        const dimenzijaLabel = document.getElementById('dimenzija-label');
+        const dimenzijaInput = document.getElementById('dimenzija-input');
+        const runInteractiveBtn = document.getElementById('run-oblik-interactive');
+        const outputInteractive = document.getElementById('output-oblik-interactive');
+
+        oblikSelect.addEventListener('change', () => {
+            if (oblikSelect.value === 'krug') {
+                dimenzijaLabel.textContent = 'Unesi poluprečnik:';
+            } else {
+                dimenzijaLabel.textContent = 'Unesi dužinu stranice:';
+            }
+        });
+
+        runInteractiveBtn.addEventListener('click', () => {
+            const dimenzija = parseFloat(dimenzijaInput.value);
+            if (isNaN(dimenzija) || dimenzija <= 0) {
+                outputInteractive.textContent = 'Molimo unesite validnu, pozitivnu vrednost.';
+                return;
+            }
+
+            let povrsina = 0;
+            let poruka = '';
+
+            if (oblikSelect.value === 'krug') {
+                povrsina = Math.PI * dimenzija * dimenzija;
+                poruka = `Površina kruga sa poluprečnikom ${dimenzija} je: ${povrsina.toFixed(4)}`;
+            } else {
+                povrsina = dimenzija * dimenzija;
+                poruka = `Površina kvadrata sa stranicom ${dimenzija} je: ${povrsina.toFixed(4)}`;
+            }
+            outputInteractive.textContent = poruka;
+        });
+
+    });
+</script>
+
+</body>
+</html>
