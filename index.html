@@ -567,6 +567,137 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-12 pt-8 border-t-4 border-dashed border-gray-300">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Zadaci za Vežbu: Nasleđivanje</h2>
+    <p class="text-base sm:text-lg mb-6">Testirajte svoje znanje kroz sledeće zadatke. Rešenja su sakrivena. Unesite šifru da biste ih otključali i uporedili sa svojim kodom.</p>
+</div>
+
+<!-- ZADATAK 1 -->
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+    <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 1: Hijerarhija elektronskih uređaja (Višeslojno nasleđivanje)</h3>
+    <ol class="list-decimal list-inside space-y-2 mb-6">
+        <li>Kreirati klasu <strong><code>ElektronskiUredjaj</code></strong> sa atributima <code>proizvodjac</code>, <code>model</code> i metodom <code>ukljuci()</code>.</li>
+        <li>Kreirati klasu <strong><code>Racunar</code></strong> koja nasleđuje <code>ElektronskiUredjaj</code> i dodaje atribute za brzinu procesora i RAM, kao i metodu <code>pokreniAplikaciju()</code>.</li>
+        <li>Kreirati klasu <strong><code>Laptop</code></strong> koja nasleđuje <code>Racunar</code> i dodaje atribut za trajanje baterije, kao i metodu <code>proveriStanjeBaterije()</code>.</li>
+        <li>U glavnoj metodi, kreirati objekat klase <code>Laptop</code> i pozvati sve metode da se demonstrira nasleđivanje.</li>
+    </ol>
+
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-1">
+        <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+        <p class="text-sm text-gray-600 mb-2">Unesite šifru da biste otključali rešenje.</p>
+        <div class="flex items-center space-x-2">
+            <input type="password" id="password-zadatak-1" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-[#9F8170] focus:border-[#9F8170]" placeholder="Šifra...">
+            <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg hover:bg-[#9F8170] transition" data-solution-id="solution-zadatak-1" data-password-id="password-zadatak-1" data-error-id="error-zadatak-1" data-container-id="unlock-container-1">Otključaj</button>
+        </div>
+        <p id="error-zadatak-1" class="text-red-600 font-bold text-sm mt-2 hidden">Ne varaj bogove kodiranja!</p>
+    </div>
+
+    <div id="solution-zadatak-1" class="hidden mt-6">
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje (Kod)</h4>
+    <div class="code-block"><span class="comment">// Nadklasa</span><br><span class="keyword">class</span> <span class="type">ElektronskiUredjaj</span> {<br>    <span class="type">String</span> proizvodjac;<br>    <span class="type">String</span> model;<br><br>    <span class="keyword">public</span> <span class="method">ElektronskiUredjaj</span>(<span class="type">String</span> proizvodjac, <span class="type">String</span> model) {<br>        <span class="keyword">this</span>.proizvodjac = proizvodjac;<br>        <span class="keyword">this</span>.model = model;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">ukljuci</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Uređaj "</span> + <span class="keyword">this</span>.proizvodjac + <span class="string">" "</span> + <span class="keyword">this</span>.model + <span class="string">" se uključuje."</span>);<br>    }<br>}<br><br><span class="comment">// Podklasa nivoa 1</span><br><span class="keyword">class</span> <span class="type">Racunar</span> <span class="keyword">extends</span> <span class="type">ElektronskiUredjaj</span> {<br>    <span class="type">double</span> brzinaProcesoraGHz;<br>    <span class="type">int</span> kolicinaRAMaGB;<br><br>    <span class="keyword">public</span> <span class="method">Racunar</span>(<span class="type">String</span> proizvodjac, <span class="type">String</span> model, <span class="type">double</span> brzinaProcesoraGHz, <span class="type">int</span> kolicinaRAMaGB) {<br>        <span class="comment">// Pozivamo konstruktor nadklase da inicijalizuje svoja polja</span><br>        <span class="keyword">super</span>(proizvodjac, model);<br>        <span class="keyword">this</span>.brzinaProcesoraGHz = brzinaProcesoraGHz;<br>        <span class="keyword">this</span>.kolicinaRAMaGB = kolicinaRAMaGB;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">pokreniAplikaciju</span>(<span class="type">String</span> imeAplikacije) {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Aplikacija '"</span> + imeAplikacije + <span class="string">"' se pokreće na računaru."</span>);<br>    }<br>}<br><br><span class="comment">// Podklasa nivoa 2</span><br><span class="keyword">class</span> <span class="type">Laptop</span> <span class="keyword">extends</span> <span class="type">Racunar</span> {<br>    <span class="type">double</span> trajanjeBaterijeSati;<br><br>    <span class="keyword">public</span> <span class="method">Laptop</span>(<span class="type">String</span> proizvodjac, <span class="type">String</span> model, <span class="type">double</span> brzinaProcesoraGHz, <span class="type">int</span> kolicinaRAMaGB, <span class="type">double</span> trajanjeBaterijeSati) {<br>        <span class="comment">// Pozivamo konstruktor direktnog roditelja (Racunar)</span><br>        <span class="keyword">super</span>(proizvodjac, model, brzinaProcesoraGHz, kolicinaRAMaGB);<br>        <span class="keyword">this</span>.trajanjeBaterijeSati = trajanjeBaterijeSati;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">proveriStanjeBaterije</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Baterija laptopa traje "</span> + <span class="keyword">this</span>.trajanjeBaterijeSati + <span class="string">" sati."</span>);<br>    }<br>}<br><br><span class="comment">// Glavna klasa za testiranje</span><br><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">UredjajiTest</span> {<br>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {<br>        <span class="type">Laptop</span> mojLaptop = <span class="keyword">new</span> <span class="type">Laptop</span>(<span class="string">"Dell"</span>, <span class="string">"XPS 15"</span>, 3.5, 16, 8.5);<br><br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"--- Testiranje Laptopa ---"</span>);<br>        <span class="comment">// Metoda nasleđena od ElektronskiUredjaj</span><br>        mojLaptop.<span class="method">ukljuci</span>();<br><br>        <span class="comment">// Metoda nasleđena od Racunar</span><br>        mojLaptop.<span class="method">pokreniAplikaciju</span>(<span class="string">"Visual Studio Code"</span>);<br><br>        <span class="comment">// Metoda definisana u klasi Laptop</span><br>        mojLaptop.<span class="method">proveriStanjeBaterije</span>();<br><br>        <span class="comment">// Prikaz nasleđenih atributa</span><br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Proizvođač: "</span> + mojLaptop.proizvodjac); <span class="comment">// Od ElektronskiUredjaj</span><br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"RAM: "</span> + mojLaptop.kolicinaRAMaGB + <span class="string">"GB"</span>);   <span class="comment">// Od Racunar</span><br>    }<br>}</div>
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Detaljna analiza rešenja</h4>
+    <ul class="list-disc list-inside space-y-2">
+        <li><strong>Struktura hijerarhije</strong>: Imamo troslojnu hijerarhiju: <code>Laptop</code> -> <code>Racunar</code> -> <code>ElektronskiUredjaj</code>. Ovo se zove <strong>višeslojno nasleđivanje</strong>.</li>
+        <li><strong>Lanac konstruktora</strong>: Kada se kreira <code>Laptop</code>, njegov konstruktor poziva <code>super(...)</code> da bi se pokrenuo konstruktor <code>Racunara</code>, koji zatim poziva konstruktor <code>ElektronskiUredjaj</code>-a. Ovo osigurava da svaka klasa u lancu pravilno inicijalizuje svoje delove objekta.</li>
+        <li><strong>Akumulacija osobina</strong>: Objekat <code>Laptop</code> sadrži sve atribute i metode svojih predaka. Zato može da pozove metode iz sve tri klase.</li>
+    </ul>
+    </div>
+</div>
+
+<!-- ZADATAK 2 -->
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+    <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 2: Medijski sadržaji i redefinisanje metoda</h3>
+    <ol class="list-decimal list-inside space-y-2 mb-6">
+        <li>Kreirati baznu klasu <strong><code>MedijskiSadrzaj</code></strong> sa atributima za naziv i trajanje, i metodom <code>reprodukuj()</code>.</li>
+        <li>Kreirati klasu <strong><code>Film</code></strong> koja nasleđuje <code>MedijskiSadrzaj</code>, dodaje atribut <code>reziser</code> i <strong>redefiniše (override)</strong> metodu <code>reprodukuj()</code> da ispiše specifičnu poruku za film.</li>
+        <li>Kreirati klasu <strong><code>MuzickaNumera</code></strong> koja takođe nasleđuje <code>MedijskiSadrzaj</code>, dodaje atribut <code>izvodjac</code> i <strong>redefiniše</strong> metodu <code>reprodukuj()</code> sa porukom za pesmu.</li>
+        <li>U glavnoj metodi, kreirati objekte za film i pesmu i pozvati njihove <code>reprodukuj()</code> metode da se prikaže različito ponašanje.</li>
+    </ol>
+
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-2">
+         <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+        <p class="text-sm text-gray-600 mb-2">Unesite šifru da biste otključali rešenje.</p>
+        <div class="flex items-center space-x-2">
+            <input type="password" id="password-zadatak-2" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-[#9F8170] focus:border-[#9F8170]" placeholder="Šifra...">
+            <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg hover:bg-[#9F8170] transition" data-solution-id="solution-zadatak-2" data-password-id="password-zadatak-2" data-error-id="error-zadatak-2" data-container-id="unlock-container-2">Otključaj</button>
+        </div>
+        <p id="error-zadatak-2" class="text-red-600 font-bold text-sm mt-2 hidden">Ne varaj bogove kodiranja!</p>
+    </div>
+
+    <div id="solution-zadatak-2" class="hidden mt-6">
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje (Kod)</h4>
+    <div class="code-block"><span class="keyword">class</span> <span class="type">MedijskiSadrzaj</span> {<br>    <span class="type">String</span> naziv;<br>    <span class="type">int</span> trajanjeMinuti;<br><br>    <span class="keyword">public</span> <span class="method">MedijskiSadrzaj</span>(<span class="type">String</span> naziv, <span class="type">int</span> trajanjeMinuti) {<br>        <span class="keyword">this</span>.naziv = naziv;<br>        <span class="keyword">this</span>.trajanjeMinuti = trajanjeMinuti;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">reprodukuj</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Reprodukujem medijski sadržaj: "</span> + <span class="keyword">this</span>.naziv);<br>    }<br>}<br><br><span class="keyword">class</span> <span class="type">Film</span> <span class="keyword">extends</span> <span class="type">MedijskiSadrzaj</span> {<br>    <span class="type">String</span> reziser;<br><br>    <span class="keyword">public</span> <span class="method">Film</span>(<span class="type">String</span> naziv, <span class="type">int</span> trajanjeMinuti, <span class="type">String</span> reziser) {<br>        <span class="keyword">super</span>(naziv, trajanjeMinuti);<br>        <span class="keyword">this</span>.reziser = reziser;<br>    }<br><br>    <span class="comment">// Redefinisanje (Overriding) metode iz nadklase</span><br>    <span class="annotation">@Override</span><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">reprodukuj</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Prikazujem film: "</span> + <span class="keyword">this</span>.naziv + <span class="string">", režisera "</span> + <span class="keyword">this</span>.reziser);<br>    }<br>}<br><br><span class="keyword">class</span> <span class="type">MuzickaNumera</span> <span class="keyword">extends</span> <span class="type">MedijskiSadrzaj</span> {<br>    <span class="type">String</span> izvodjac;<br><br>    <span class="keyword">public</span> <span class="method">MuzickaNumera</span>(<span class="type">String</span> naziv, <span class="type">int</span> trajanjeMinuti, <span class="type">String</span> izvodjac) {<br>        <span class="keyword">super</span>(naziv, trajanjeMinuti);<br>        <span class="keyword">this</span>.izvodjac = izvodjac;<br>    }<br><br>    <span class="comment">// Redefinisanje metode</span><br>    <span class="annotation">@Override</span><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">reprodukuj</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Slušate pesmu: "</span> + <span class="keyword">this</span>.naziv + <span class="string">", izvođača "</span> + <span class="keyword">this</span>.izvodjac);<br>    }<br>}<br><br><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">MedijaTest</span> {<br>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {<br>        <span class="type">Film</span> kum = <span class="keyword">new</span> <span class="type">Film</span>(<span class="string">"The Godfather"</span>, 175, <span class="string">"Francis Ford Coppola"</span>);<br>        <span class="type">MuzickaNumera</span> boemska = <span class="keyword">new</span> <span class="type">MuzickaNumera</span>(<span class="string">"Bohemian Rhapsody"</span>, 6, <span class="string">"Queen"</span>);<br><br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"--- Reprodukcija ---"</span>);<br>        <br>        <span class="comment">// Poziva se redefinisana metoda iz klase Film</span><br>        kum.<span class="method">reprodukuj</span>();<br><br>        <span class="comment">// Poziva se redefinisana metoda iz klase MuzickaNumera</span><br>        boemska.<span class="method">reprodukuj</span>();<br>    }<br>}</div>
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Detaljna analiza rešenja</h4>
+    <ul class="list-disc list-inside space-y-2">
+        <li><strong>Hijerarhijsko nasleđivanje</strong>: I <code>Film</code> i <code>MuzickaNumera</code> nasleđuju istu baznu klasu, ali ne nasleđuju jedna drugu.</li>
+        <li><strong>Redefinisanje metoda (<code>@Override</code>)</strong>: Obe podklase pružaju svoju, specifičnu implementaciju metode <code>reprodukuj()</code>. Ovo je ključni deo zadatka i osnova polimorfizma.</li>
+        <li><strong>"Ugovor" nadklase</strong>: Nadklasa <code>MedijskiSadrzaj</code> definiše da "svaki medij mora imati mogućnost reprodukcije", a podklase ispunjavaju taj ugovor na svoj način.</li>
+    </ul>
+</div>
+</div>
+
+<!-- ZADATAK 3 -->
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+    <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 3: Bankovni računi sa specifičnim pravilima</h3>
+     <ol class="list-decimal list-inside space-y-2 mb-6">
+        <li>Kreirati klasu <strong><code>BankovniRacun</code></strong> sa <code>protected</code> atributima za broj računa i stanje, i metodom <code>podigniNovac(iznos)</code> koja proverava da li ima dovoljno sredstava.</li>
+        <li>Kreirati klasu <strong><code>TekuciRacun</code></strong> koja nasleđuje <code>BankovniRacun</code>, dodaje atribut <code>dozvoljeniMinus</code> i redefiniše metodu <code>podigniNovac</code> tako da dozvoljava podizanje do iznosa (stanje + dozvoljeniMinus).</li>
+        <li>Kreirati klasu <strong><code>StedniRacun</code></strong> koja nasleđuje <code>BankovniRacun</code>, dodaje atribut <code>kamatnaStopa</code> i novu metodu <code>obracunajKamatu()</code>. Ova klasa koristi originalnu metodu za podizanje novca.</li>
+        <li>Testirati podizanje novca "u minus" sa tekućeg računa i obračun kamate na štednom.</li>
+    </ol>
+
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-3">
+        <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+        <p class="text-sm text-gray-600 mb-2">Unesite šifru da biste otključali rešenje.</p>
+        <div class="flex items-center space-x-2">
+            <input type="password" id="password-zadatak-3" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-[#9F8170] focus:border-[#9F8170]" placeholder="Šifra...">
+            <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg hover:bg-[#9F8170] transition" data-solution-id="solution-zadatak-3" data-password-id="password-zadatak-3" data-error-id="error-zadatak-3" data-container-id="unlock-container-3">Otključaj</button>
+        </div>
+        <p id="error-zadatak-3" class="text-red-600 font-bold text-sm mt-2 hidden">Ne varaj bogove kodiranja!</p>
+    </div>
+
+    <div id="solution-zadatak-3" class="hidden mt-6">
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje (Kod)</h4>
+    <div class="code-block"><span class="keyword">class</span> <span class="type">BankovniRacun</span> {<br>    <span class="keyword">protected</span> <span class="type">String</span> brojRacuna;<br>    <span class="keyword">protected</span> <span class="type">double</span> stanje;<br><br>    <span class="keyword">public</span> <span class="method">BankovniRacun</span>(<span class="type">String</span> brojRacuna, <span class="type">double</span> pocetnoStanje) {<br>        <span class="keyword">this</span>.brojRacuna = brojRacuna;<br>        <span class="keyword">this</span>.stanje = pocetnoStanje;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">prikaziStanje</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Stanje na računu "</span> + brojRacuna + <span class="string">": "</span> + String.<span class="method">format</span>(<span class="string">"%.2f"</span>, stanje) + <span class="string">" EUR"</span>);<br>    }<br><br>    <span class="keyword">public</span> <span class="type">boolean</span> <span class="method">podigniNovac</span>(<span class="type">double</span> iznos) {<br>        <span class="keyword">if</span> (iznos > stanje) {<br>            System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Greška: Nemate dovoljno sredstava."</span>);<br>            <span class="keyword">return</span> <span class="literal">false</span>;<br>        }<br>        stanje -= iznos;<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Podignuto: "</span> + iznos + <span class="string">" EUR"</span>);<br>        <span class="keyword">return</span> <span class="literal">true</span>;<br>    }<br>}<br><br><span class="keyword">class</span> <span class="type">TekuciRacun</span> <span class="keyword">extends</span> <span class="type">BankovniRacun</span> {<br>    <span class="keyword">private</span> <span class="type">double</span> dozvoljeniMinus;<br><br>    <span class="keyword">public</span> <span class="method">TekuciRacun</span>(<span class="type">String</span> brojRacuna, <span class="type">double</span> pocetnoStanje, <span class="type">double</span> dozvoljeniMinus) {<br>        <span class="keyword">super</span>(brojRacuna, pocetnoStanje);<br>        <span class="keyword">this</span>.dozvoljeniMinus = dozvoljeniMinus;<br>    }<br><br>    <span class="annotation">@Override</span><br>    <span class="keyword">public</span> <span class="type">boolean</span> <span class="method">podigniNovac</span>(<span class="type">double</span> iznos) {<br>        <span class="keyword">if</span> (iznos > (stanje + dozvoljeniMinus)) {<br>            System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Greška: Prekoračili ste dozvoljeni minus."</span>);<br>            <span class="keyword">return</span> <span class="literal">false</span>;<br>        }<br>        stanje -= iznos;<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Podignuto: "</span> + iznos + <span class="string">" EUR"</span>);<br>        <span class="keyword">return</span> <span class="literal">true</span>;<br>    }<br>}<br><br><span class="keyword">class</span> <span class="type">StedniRacun</span> <span class="keyword">extends</span> <span class="type">BankovniRacun</span> {<br>    <span class="keyword">private</span> <span class="type">double</span> kamatnaStopa;<br><br>    <span class="keyword">public</span> <span class="method">StedniRacun</span>(<span class="type">String</span> brojRacuna, <span class="type">double</span> pocetnoStanje, <span class="type">double</span> kamatnaStopa) {<br>        <span class="keyword">super</span>(brojRacuna, pocetnoStanje);<br>        <span class="keyword">this</span>.kamatnaStopa = kamatnaStopa;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">void</span> <span class="method">obracunajKamatu</span>() {<br>        <span class="type">double</span> kamata = stanje * kamatnaStopa;<br>        stanje += kamata;<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Obracunata kamata u iznosu od "</span> + String.<span class="method">format</span>(<span class="string">"%.2f"</span>, kamata) + <span class="string">" EUR."</span>);<br>    }<br>}<br><br><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">BankaTest</span> {<br>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"--- Tekući Račun ---"</span>);<br>        <span class="type">TekuciRacun</span> tr = <span class="keyword">new</span> <span class="type">TekuciRacun</span>(<span class="string">"123-456"</span>, 100.0, 500.0);<br>        tr.<span class="method">prikaziStanje</span>();<br>        tr.<span class="method">podigniNovac</span>(300.0); <span class="comment">// Treba da uspe, stanje će biti -200</span><br>        tr.<span class="method">prikaziStanje</span>();<br>        tr.<span class="method">podigniNovac</span>(401.0); <span class="comment">// Treba da ne uspe</span><br>        tr.<span class="method">prikaziStanje</span>();<br><br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"
+--- Štedni Račun ---"</span>);<br>        <span class="type">StedniRacun</span> sr = <span class="keyword">new</span> <span class="type">StedniRacun</span>(<span class="string">"789-012"</span>, 1000.0, 0.05);<br>        sr.<span class="method">prikaziStanje</span>();<br>        sr.<span class="method">podigniNovac</span>(1200.0); <span class="comment">// Treba da ne uspe</span><br>        sr.<span class="method">obracunajKamatu</span>();<br>        sr.<span class="method">prikaziStanje</span>();<br>    }<br>}</div>
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Detaljna analiza rešenja</h4>
+    <ul class="list-disc list-inside space-y-2">
+        <li><strong>Proširenje vs. Modifikacija</strong>: <code>TekuciRacun</code> <strong>modifikuje</strong> postojeće ponašanje (podizanje novca). <code>StedniRacun</code>, sa druge strane, <strong>proširuje</strong> funkcionalnost dodavanjem nove metode <code>obracunajKamatu()</code>, dok koristi originalnu, nepromenjenu logiku za podizanje novca.</li>
+        <li><strong><code>protected</code> vs. <code>private</code></strong>: Atribut <code>stanje</code> je <code>protected</code>, što znači da mu podklase mogu direktno pristupiti. Ovo je jedna od validnih upotreba <code>protected</code> modifikatora pristupa.</li>
+    </ul>
+</div>
+</div>
+
+<!-- ZADATAK 4 -->
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+    <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 4: Proizvodi i obračun cene (Korišćenje <code>super.metoda()</code>)</h3>
+     <ol class="list-decimal list-inside space-y-2 mb-6">
+        <li>Kreirati klasu <strong><code>Proizvod</code></strong> sa atributima za naziv i osnovnu cenu, i metodom <code>obracunajCenu()</code> koja vraća osnovnu cenu.</li>
+        <li>Kreirati klasu <strong><code>PrehrambeniProizvod</code></strong> koja nasleđuje <code>Proizvod</code>, dodaje atribut <code>stopaPDVa</code> i redefiniše metodu <code>obracunajCenu()</code>.</li>
+        <li><strong>Ključni zahtev</strong>: Unutar redefinisane metode, za dobijanje osnovne cene, morate pozvati originalnu <code>obracunajCenu()</code> metodu iz nadklase <code>Proizvod</code> koristeći <code>super.obracunajCenu()</code>, a zatim na tu vrednost dodati PDV.</li>
+        <li>Testirati obe klase i prikazati njihove konačne cene.</li>
+    </ol>
+    
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-4">
+        <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+        <p class="text-sm text-gray-600 mb-2">Unesite šifru da biste otključali rešenje.</p>
+        <div class="flex items-center space-x-2">
+            <input type="password" id="password-zadatak-4" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-[#9F8170] focus:border-[#9F8170]" placeholder="Šifra...">
+            <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg hover:bg-[#9F8170] transition" data-solution-id="solution-zadatak-4" data-password-id="password-zadatak-4" data-error-id="error-zadatak-4" data-container-id="unlock-container-4">Otključaj</button>
+        </div>
+        <p id="error-zadatak-4" class="text-red-600 font-bold text-sm mt-2 hidden">Ne varaj bogove kodiranja!</p>
+    </div>
+
+    <div id="solution-zadatak-4" class="hidden mt-6">
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje (Kod)</h4>
+    <div class="code-block"><span class="keyword">class</span> <span class="type">Proizvod</span> {<br>    <span class="keyword">protected</span> <span class="type">String</span> naziv;<br>    <span class="keyword">protected</span> <span class="type">double</span> osnovnaCena;<br><br>    <span class="keyword">public</span> <span class="method">Proizvod</span>(<span class="type">String</span> naziv, <span class="type">double</span> osnovnaCena) {<br>        <span class="keyword">this</span>.naziv = naziv;<br>        <span class="keyword">this</span>.osnovnaCena = osnovnaCena;<br>    }<br><br>    <span class="keyword">public</span> <span class="type">double</span> <span class="method">obracunajCenu</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Obračunavam cenu za opšti proizvod."</span>);<br>        <span class="keyword">return</span> <span class="keyword">this</span>.osnovnaCena;<br>    }<br>}<br><br><span class="keyword">class</span> <span class="type">PrehrambeniProizvod</span> <span class="keyword">extends</span> <span class="type">Proizvod</span> {<br>    <span class="keyword">private</span> <span class="type">double</span> stopaPDVa;<br><br>    <span class="keyword">public</span> <span class="method">PrehrambeniProizvod</span>(<span class="type">String</span> naziv, <span class="type">double</span> osnovnaCena, <span class="type">double</span> stopaPDVa) {<br>        <span class="keyword">super</span>(naziv, osnovnaCena);<br>        <span class="keyword">this</span>.stopaPDVa = stopaPDVa;<br>    }<br><br>    <span class="annotation">@Override</span><br>    <span class="keyword">public</span> <span class="type">double</span> <span class="method">obracunajCenu</span>() {<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Obračunavam cenu za prehrambeni proizvod (sa PDV-om)."</span>);<br>        <span class="comment">// Pozivamo metodu iz nadklase da dobijemo osnovnu cenu</span><br>        <span class="type">double</span> cenaBezPDVa = <span class="keyword">super</span>.<span class="method">obracunajCenu</span>();<br>        <span class="type">double</span> iznosPDVa = cenaBezPDVa * <span class="keyword">this</span>.stopaPDVa;<br>        <span class="keyword">return</span> cenaBezPDVa + iznosPDVa;<br>    }<br>}<br><br><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">ProdavnicaTest</span> {<br>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {<br>        <span class="type">Proizvod</span> sveska = <span class="keyword">new</span> <span class="type">Proizvod</span>(<span class="string">"Sveska A4"</span>, 150.0);<br>        <span class="type">PrehrambeniProizvod</span> hleb = <span class="keyword">new</span> <span class="type">PrehrambeniProizvod</span>(<span class="string">"Hleb"</span>, 80.0, 0.10); <span class="comment">// PDV od 10% na hleb</span><br><br>        <span class="type">double</span> cenaSveske = sveska.<span class="method">obracunajCenu</span>();<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Konačna cena za '"</span> + sveska.naziv + <span class="string">"': "</span> + cenaSveske + <span class="string">" RSD"</span>);<br><br>        System.<span class="method">out</span>.<span class="method">println</span>();<br><br>        <span class="type">double</span> cenaHleba = hleb.<span class="method">obracunajCenu</span>();<br>        System.<span class="method">out</span>.<span class="method">println</span>(<span class="string">"Konačna cena za '"</span> + hleb.naziv + <span class="string">"': "</span> + cenaHleba + <span class="string">" RSD"</span>);<br>    }<br>}</div>
+    <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Detaljna analiza rešenja</h4>
+    <ul class="list-disc list-inside space-y-2">
+        <li><strong><code>super.metoda()</code></strong>: Srž ovog zadatka je poziv <code>super.obracunajCenu()</code>. Time ne pišemo ponovo logiku za dobijanje osnovne cene, već kažemo Javi: "Izvrši originalnu metodu iz mog roditelja i daj mi njen rezultat".</li>
+        <li><strong>Proširivanje logike</strong>: Nakon što smo dobili rezultat od nadklase, mi ga koristimo da <strong>proširimo</strong> logiku dodavanjem obračuna PDV-a. Ovo je izuzetno čest i važan obrazac u OOP-u, jer sprečava dupliranje koda.</li>
+    </ul>
+</div>
+</div>
         </section>
 
         <!-- Database Section -->
@@ -973,6 +1104,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setActiveMainSection('welcome-section');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Pronađi sva dugmad koja imaju klasu 'show-solution-btn'
+    const unlockButtons = document.querySelectorAll('.show-solution-btn');
+
+    // Prođi kroz svako dugme i dodaj mu event listener
+    unlockButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Dohvati ID-jeve iz data atributa na kliknutom dugmetu
+            const solutionId = this.dataset.solutionId;
+            const passwordId = this.dataset.passwordId;
+            const errorId = this.dataset.errorId;
+            const containerId = this.dataset.containerId;
+
+            // Pronađi elemente na stranici na osnovu njihovih ID-jeva
+            const solutionDiv = document.getElementById(solutionId);
+            const passwordInput = document.getElementById(passwordId);
+            const errorP = document.getElementById(errorId);
+            const unlockContainer = document.getElementById(containerId);
+
+            // Proveri da li je uneta šifra ispravna
+            if (passwordInput.value === 'haos') {
+                // Ako jeste:
+                // 1. Prikaži div sa rešenjem (uklanjanjem klase 'hidden')
+                solutionDiv.classList.remove('hidden');
+                // 2. Sakrij ceo kontejner za unos šifre (dodavanjem klase 'hidden')
+                unlockContainer.classList.add('hidden');
+                // 3. Za svaki slučaj, sakrij i poruku o grešci
+                errorP.classList.add('hidden');
+            } else {
+                // Ako šifra nije ispravna:
+                // 1. Prikaži poruku o grešci
+                errorP.classList.remove('hidden');
+            }
+        });
+    });
 });
 </script>
 
