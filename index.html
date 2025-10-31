@@ -833,17 +833,269 @@
                         </section>
 
                         <section id="db-lekcija6" class="sub-content-section">
-                            <h3>Lekcija 6: Radionica - Pravimo bazu bez kucanja koda (ApexSQL)</h3>
-                            <p>U praksi, programeri koriste alate sa grafičkim interfejsom (GUI) koji im omogućavaju da stvari urade brže i lakše, kliktanjem mišem. Proći ćemo kroz ceo proces koristeći ApexSQL alate.</p>
-                            <h4>Radionica 1: Vizuelno modeliranje baze (ApexSQL Model)</h4>
-                            <p>U ApexSQL Model možemo vizuelno, prevlačenjem i kliktanjem, napraviti kompletan nacrt baze. Kreiramo tabele, definišemo kolone i njihove tipove, postavljamo primarne ključeve i povezujemo tabele prevlačenjem miša da bismo stvorili spoljne ključeve. Kada je dijagram gotov, alat automatski generiše i izvršava sav potreban <code>CREATE TABLE</code> SQL kod.</p>
-                            <h4>Radionica 2: Unos podataka iz Excela (ApexSQL Pump)</h4>
-                            <p>Pomoću alata kao što je ApexSQL Pump, možemo lako uvesti podatke iz eksternih fajlova, npr. Excel tabele. Proces uključuje odabir fajla, mapiranje (povezivanje) kolona iz Excela sa kolonama u bazi, i izvršavanje. Alat automatski generiše i izvršava sve potrebne <code>INSERT INTO</code> komande.</p>
-                            <h4>Radionica 3: Automatsko generisanje koda (ApexSQL Complete)</h4>
-                            <p>Alati kao ApexSQL Complete mogu automatski generisati gotove, funkcionalne SQL procedure za osnovne operacije sa podacima: Create (kreiranje), Read (čitanje), Update (izmena) i Delete (brisanje), poznate kao CRUD procedure. Ovo drastično ubrzava razvoj aplikacija.</p>
-                            <h4>Zaključka lekcije</h4>
-                            <p>Danas nismo napisali skoro nijednu liniju koda, a uradili smo sve što i u prethodnim lekcijama. Ovi alati drastično ubrzavaju rad i smanjuju mogućnost greške, ali je važno razumeti teoriju koja stoji iza njih.</p>
-                        </section>
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 1: Uvod u ApexSQL Refactor: Vaš Asistent za Profesionalni SQL Kod</h2>
+    <p>U svetu programiranja, a posebno u radu sa bazama podataka, često se susrećemo sa kodom koji "radi posao". On izvršava zadatak, vraća podatke i naizgled ispunjava svoju svrhu. Međutim, postoji ogromna razlika između koda koji samo radi i koda koji je <strong>dobar</strong>. Dobar kod nije samo funkcionalan; on je čitljiv, razumljiv, efikasan i, što je najvažnije, lak za održavanje i nadogradnju. Tu na scenu stupa koncept refaktorisanja.</p>
+
+    <h3>Šta je refaktorisanje i zašto bi vas to zanimalo?</h3>
+    <p>Najjednostavnije rečeno, <strong>refaktorisanje</strong> je proces restrukturiranja postojećeg kompjuterskog koda – menjanje njegove unutrašnje strukture bez promene spoljašnjeg ponašanja. Zamislite to kao sređivanje i reorganizaciju vaše sobe. Sve vaše stvari su i dalje tu i služe istoj svrsi, ali su sada uredno složene, logično raspoređene i lako dostupne. Kada je soba sređena, mnogo je lakše pronaći ono što vam treba i dodati nove stvari bez stvaranja haosa.</p>
+    <p>Isto važi i za kod. Refaktorisanjem se ne dodaje nova funkcionalnost, već se poboljšava postojeća. Cilj je da kod postane:</p>
+    <ul>
+        <li><strong>Čitljiviji:</strong> Drugi programeri (ili vi sami, šest meseci kasnije) mogu brzo da razumeju šta kod radi.</li>
+        <li><strong>Jednostavniji:</strong> Smanjuje se nepotrebna kompleksnost, što olakšava pronalaženje i ispravljanje grešaka.</li>
+        <li><strong>Lakši za održavanje:</strong> Kada dođe vreme za promenu ili nadogradnju, to se može uraditi brže i sa manjim rizikom od uvođenja novih grešaka.</li>
+    </ul>
+    <p>Usvajanje navike redovnog refaktorisanja je jedan od ključnih koraka koji deli amaterskog programera od profesionalca. To je disciplina koja pokazuje poštovanje prema kodu, kolegama i budućem sebi.</p>
+
+    <h3>Predstavljanje ApexSQL Refactor</h3>
+    <p>Da bi proces refaktorisanja bio efikasan i bezbedan, programeri se oslanjaju na specijalizovane alate. U svetu Microsoft SQL Servera, jedan od najpoznatijih i najpristupačnijih alata za ovu svrhu je <code>ApexSQL Refactor</code>.</p>
+    <p><code>ApexSQL Refactor</code> je besplatan dodatak (add-in) za <code>SQL Server Management Studio (SSMS)</code> i <code>Visual Studio</code>.<sup>1</sup> Možete ga zamisliti kao izuzetno pametnog asistenta koji živi unutar vašeg radnog okruženja i pomaže vam da primenite najbolje prakse u pisanju SQL koda. Sa preko 200 opcija za formatiranje i skoro 15 moćnih funkcija za refaktorisanje, on automatizuje zadatke koji bi ručno bili zamorni i podložni greškama.<sup>1</sup></p>
+    <p class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">Važno je razumeti da, iako ApexSQL nudi čitav spektar alata za rad sa bazama podataka – kao što su <code>ApexSQL Diff</code> za poređenje šema, <code>ApexSQL Log</code> za analizu transakcionih logova ili <code>ApexSQL DevOps Toolkit</code> za automatizaciju – <code>ApexSQL Refactor</code> je fundamentalan.<sup>5</sup> Učenje kako da se piše čist, dobro strukturiran i održiv kod je preduslov za sve ostale napredne aktivnosti. Čist kod je lakše upoređivati, lakše je pratiti njegove promene i manje je verovatno da će izazvati probleme koji zahtevaju dubinsku analizu. Zbog toga je savladavanje <code>ApexSQL Refactor</code>-a prva i najvažnija stepenica u korišćenju profesionalnih alata za baze podataka.</p>
+
+    <h3>Pregled putovanja: Šta ćemo naučiti?</h3>
+    <p>Ovaj vodič je osmišljen kao putovanje koje će vas provesti kroz četiri nivoa veštine, koristeći praktične primere koji rastu po složenosti. Počećemo od osnova – vizuelnog sređivanja koda – i postepeno prelaziti na složenije, strukturne izmene koje utiču na samu arhitekturu baze podataka. Svaki primer će demonstrirati ne samo kako koristiti određenu funkciju alata, već i zašto je koncept iza te funkcije važan za vaš razvoj kao profesionalca.</p>
+    <p>Da bismo imali jasnu mapu puta, pogledajmo tabelu ispod.</p>
+    
+    <table>
+        <caption>Tabela 1: Mapa puta kroz ApexSQL Refactor</caption>
+        <thead>
+            <tr>
+                <th>Primer</th>
+                <th>Funkcija ApexSQL Refactor</th>
+                <th>Ključni Koncept</th>
+                <th>Nivo Težine</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Primer 1</td>
+                <td>Formatiranje koda</td>
+                <td>Čitljivost, standardizacija i timski rad</td>
+                <td>Osnovni</td>
+            </tr>
+            <tr>
+                <td>Primer 2</td>
+                <td>Proširivanje džokera (*)</td>
+                <td>Performanse i stabilnost upita</td>
+                <td>Početni</td>
+            </tr>
+            <tr>
+                <td>Primer 3</td>
+                <td>Inkapsulacija koda</td>
+                <td>Ponovna upotrebljivost, bezbednost i održivost</td>
+                <td>Srednji</td>
+            </tr>
+            <tr>
+                <td>Primer 4</td>
+                <td>Bezbedno preimenovanje</td>
+                <td>Integritet baze i upravljanje zavisnostima</td>
+                <td>Napredni</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Kroz ove primere, nećete samo naučiti da koristite jedan alat. Naučićete da razmišljate o kodu na dublji način, da predviđate potencijalne probleme i da pišete rešenja koja su robusna, efikasna i spremna za budućnost. Krenimo na putovanje.</p>
+
+<h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 2: Primer 1 (Osnovni nivo): Automatsko Formatiranje i Ulepšavanje Koda</h2>
+    <p>Prvi korak na putu ka profesionalnom kodu nema veze sa kompleksnim algoritmima ili naprednim funkcijama baze podataka. Ima veze sa disciplinom i čitljivošću. Neuredan, nedosledno formatiran kod je kao neuredna radionica – možda znate gde se šta nalazi, ali svaki novi zadatak zahteva dodatni napor samo da biste se snašli u haosu.</p>
+
+    <h3>Zašto je formatiranje važno? Više od pukog izgleda.</h3>
+    <p>Mnogi početnici potcenjuju važnost formatiranja, smatrajući ga čisto estetskom kategorijom. Međutim, njegov uticaj je mnogo dublji i direktno utiče na kvalitet i cenu razvoja softvera.</p>
+    <ul>
+        <li><strong>Smanjenje kognitivnog opterećenja:</strong> Ljudski mozak ima ograničen kapacitet radne memorije. Kada čitate neuredan kod – sa nedoslednim uvlačenjem, pomešanim velikim i malim slovima i bez logičkih preloma – vaš mozak troši dragocene resurse samo na "dešifrovanje" strukture, umesto da se fokusira na logiku. Dobro formatiran kod je vizuelno organizovan i omogućava vam da trenutno prepoznate ključne delove upita (SELECT, FROM, WHERE, JOIN), oslobađajući mentalni kapacitet za rešavanje stvarnih problema.</li>
+        <li><strong>Uspostavljanje timskih standarda:</strong> U profesionalnom okruženju, retko kada radite sami. Kod koji vi napišete danas, sutra će možda morati da čita, razume i menja vaš kolega. Ako svako u timu formatira kod na svoj način, nastaje konfuzija i usporava se rad. Uspostavljanje i automatsko sprovođenje jedinstvenog stila formatiranja je ključno za efikasan timski rad.</li>
+    </ul>
+    <p>ApexSQL Refactor vam omogućava da definišete i primenite ova pravila jednim klikom, pretvarajući haos u red.</p>
+
+    <h3>Korak po korak: Podešavanje vašeg stila</h3>
+    <p>Pre nego što formatiramo naš prvi kod, hajde da pogledamo gde se krije sva moć prilagođavanja. U SSMS meniju, idite na <code>ApexSQL -> ApexSQL Refactor -> Options...</code>. Otvoriće se prozor sa mnoštvom tabova, ali za početak, fokusiraćemo se na tri najvažnija:</p>
+    <ul>
+        <li><strong>Formatting:</strong> Ovde podešavate osnovnu strukturu – da li koristite tabulatore ili razmake za uvlačenje, koliko razmaka, da li želite prazne linije pre ili posle određenih naredbi, i da li se identifikatori stavljaju u uglaste zagrade (<code>[]</code>).</li>
+        <li><strong>Capitalization:</strong> Jedna od najvidljivijih promena. Ovde definišete da li će ključne reči (SELECT, FROM, CREATE), tipovi podataka (INT, NVARCHAR), promenljive i funkcije biti pisane velikim ili malim slovima. Preporuka je da ključne reči uvek budu velikim slovima radi lakšeg vizuelnog razlikovanja.</li>
+        <li><strong>Comments:</strong> Uređuje stil i poziciju komentara u kodu.</li>
+    </ul>
+    <p class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">Najbolji deo ovog prozora je <strong>Preview panel</strong> sa desne strane. Dok menjate bilo koju od stotina dostupnih opcija, odmah vidite kako će ta promena uticati na primer koda. Ovo stvara izuzetno brzu i efikasnu petlju učenja. Možete slobodno eksperimentisati sa svim podešavanjima bez ikakvog rizika.</p>
+
+    <h3>Praktičan primer: Od haosa do reda</h3>
+    <p>Zamislimo da ste napisali upit koji spaja podatke o učenicima i njihovim ocenama. U žurbi, niste obraćali pažnju na formatiranje.</p>
+    
+    <h4>Kod PRE:</h4>
+    <div class="code-block"><span class="sql-keyword">select</span> u.ime, p.nazivpredmeta, o.ocena <span class="sql-keyword">from</span> dbo.ucenici <span class="sql-keyword">as</span> u <span class="sql-keyword">join</span> dbo.ocene <span class="sql-keyword">as</span> o <span class="sql-keyword">on</span> u.ucenikid = o.ucenikid <span class="sql-keyword">join</span> dbo.predmeti p <span class="sql-keyword">on</span> o.predmetid = p.predmetid <span class="sql-keyword">where</span> o.ocena > 3 <span class="sql-keyword">and</span> p.nazivpredmeta <span class="sql-keyword">like</span> <span class="sql-string">'Matematika%'</span> <span class="sql-keyword">order by</span> u.ime;</div>
+    <p>Ovaj kod je funkcionalan, ali je noćna mora za čitanje. Teško je na prvi pogled razdvojiti kolone, tabele, uslove spajanja i filtriranja.</p>
+    <p><strong>Akcija:</strong> Sada, hajde da primenimo magiju. Selektujte ceo blok koda u SSMS-u. Zatim, koristite prečicu na tastaturi: <code>Ctrl + Shift + Alt + F</code>.</p>
+
+    <h4>Kod POSLE:</h4>
+    <div class="code-block"><span class="sql-keyword">SELECT</span><br>    U.Ime,<br>    P.NazivPredmeta,<br>    O.Ocena<br><span class="sql-keyword">FROM</span><br>    dbo.Ucenici <span class="sql-keyword">AS</span> U<br>    <span class="sql-keyword">JOIN</span> dbo.Ocene <span class="sql-keyword">AS</span> O<br>        <span class="sql-keyword">ON</span> U.UcenikID <span class="sql-operator">=</span> O.UcenikID<br>    <span class="sql-keyword">JOIN</span> dbo.Predmeti <span class="sql-keyword">AS</span> P<br>        <span class="sql-keyword">ON</span> O.PredmetID <span class="sql-operator">=</span> P.PredmetID<br><span class="sql-keyword">WHERE</span><br>    O.Ocena > <span class="sql-number">3</span><br>    <span class="sql-keyword">AND</span> P.NazivPredmeta <span class="sql-keyword">LIKE</span> <span class="sql-string">'Matematika%'</span><br><span class="sql-keyword">ORDER BY</span><br>    U.Ime;</div>
+    <p>Razlika je drastična. Odmah možemo da vidimo:</p>
+    <ul>
+        <li><strong>Velika slova za ključne reči:</strong> <code>SELECT</code>, <code>FROM</code>, <code>JOIN</code>, <code>WHERE</code> se jasno ističu.</li>
+        <li><strong>Svaka klauzula u novom redu:</strong> Logički delovi upita su vizuelno odvojeni.</li>
+        <li><strong>Kolone na posebnim linijama:</strong> Lista kolona je pregledna.</li>
+        <li><strong>Pravilno uvlačenje:</strong> <code>JOIN</code> uslovi su uvučeni, što jasno pokazuje hijerarhiju i strukturu upita.</li>
+    </ul>
+
+    <h3>Dodatni savet: Profili za formatiranje - Sačuvajte i delite svoj stil</h3>
+    <p>ApexSQL Refactor dolazi sa nekoliko ugrađenih profila za formatiranje. Međutim, prava snaga leži u mogućnosti kreiranja sopstvenih. U <code>Options</code> prozoru, možete sačuvati profil pod određenim imenom (npr. "Stil mog tima") i postaviti ga kao aktivnog (<code>Set as active</code>).</p>
+    <p>Najvažnija funkcija za timski rad je <strong>Export</strong> i <strong>Import</strong>. Možete izvesti sva podešavanja vašeg profila u jedan XML fajl. Taj fajl zatim možete podeliti sa svim članovima vašeg tima. Oni ga jednostavno uvezu (<code>Import</code>) i svi ćete formatirati kod na identičan način. Ovo nije samo lična preferencija; ovo je mehanizam za uspostavljanje i održavanje profesionalnih standarda unutar cele organizacije.</p>
+
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 3: Primer 2 (Početni nivo): Unapređenje Upita - Od Zvezdice (*) do Eksplicitnih Kolona</h2>
+    <p>Jedna od prvih stvari koju naučimo kada počinjemo sa SQL-om je prečica <code>SELECT *</code>. Ona je brza, laka za kucanje i vraća nam sve kolone iz tabele. Za brzu proveru podataka tokom razvoja, ona je sasvim u redu. Međutim, korišćenje <code>SELECT *</code> u produkcionom kodu – kodu koji se izvršava u aplikacijama, izveštajima ili procedurama – smatra se jednom od najgorih praksi, i to sa dobrim razlogom.</p>
+
+    <h3>Zašto je zvezdica (*) opasna? Skriveni problemi SELECT *.</h3>
+    <p>Na prvi pogled, <code>SELECT *</code> deluje bezazleno. Ipak, iza te jednostavnosti kriju se ozbiljni rizici po performanse i stabilnost vašeg sistema.</p>
+    <ul>
+        <li><strong>Performanse:</strong> Kada napišete <code>SELECT *</code>, vi terate SQL Server da uradi dve nepotrebne stvari. Prvo, on mora da konsultuje sistemske tabele da bi saznao koja sve imena kolona postoje. Drugo, i važnije, vi skoro uvek prenosite više podataka nego što je vašoj aplikaciji zaista potrebno. Ako tabela <code>Ucenici</code> ima 20 kolona, a vama trebaju samo Ime i Prezime, <code>SELECT *</code> će nepotrebno opteretiti i bazu podataka i mrežni saobraćaj.</li>
+        <li><strong>Stabilnost koda (Robusnost):</strong> Ovo je najkritičniji problem. Vaš kod i vaša baza podataka imaju nevidljivi "ugovor". Kada napišete <code>SELECT *</code>, taj ugovor je vrlo labav. Zamislite da vaša aplikacija očekuje da treća kolona bude <code>DatumRodjenja</code>. Šta se dešava ako neko doda novu kolonu u tabelu koja se umeće pre datuma rođenja? Vaša aplikacija će se srušiti. Korišćenje <code>SELECT *</code> čini vaš kod izuzetno krhkim.</li>
+    </ul>
+    <p class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">Eksplicitnim navođenjem imena kolona, vi kreirate čvrst i jasan ugovor: "Potrebne su mi tačno ove kolone: Ime, Prezime, DatumRodjenja". Sada, ako neko doda novu kolonu, vaš kod će nastaviti da radi bez problema. Ovo pretvara <strong>Wildcard expansion</strong> iz obične stilske prepravke u moćan alat za proaktivno sprečavanje budućih grešaka.</p>
+
+    <h3>Korak po korak: Proširivanje džokera (Wildcard Expansion)</h3>
+    <p>ApexSQL Refactor čini ispravljanje ove loše prakse trivijalno lakim. Zamislimo da imamo sledeći upit u našem editoru:</p>
+    <div class="code-block"><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> dbo.Ucenici;</div>
+    <p>Da biste ovo refaktorisali, jednostavno pozicionirajte kursor miša bilo gde unutar zvezdice (*), desni klik, i izaberite <code>ApexSQL Refactor -> Wildcard expansion</code>.</p>
+    
+    <h4>Praktičan primer: Od implicitnog ka eksplicitnom</h4>
+    <p><strong>Kod PRE:</strong></p>
+    <div class="code-block"><span class="sql-keyword">SELECT</span><br>    *<br><span class="sql-keyword">FROM</span><br>    dbo.Ucenici;</div>
+    <p class="mt-4"><strong>Kod POSLE:</strong></p>
+    <div class="code-block"><span class="sql-keyword">SELECT</span><br>    U.UcenikID,<br>    U.Ime,<br>    U.Prezime,<br>    U.DatumRodjenja,<br>    U.Prosek<br><span class="sql-keyword">FROM</span><br>    dbo.Ucenici <span class="sql-keyword">AS</span> U;</div>
+    <p>Obratite pažnju na nekoliko pametnih stvari koje je alat uradio automatski:</p>
+    <ul>
+        <li>Zamenio je <code>*</code> sa eksplicitnom listom svih kolona.</li>
+        <li>Dodao je alijas <code>U</code> tabeli <code>Ucenici</code>.</li>
+        <li>Prefiksovao je svako ime kolone sa alijasom tabele (<code>U.Ime</code>, <code>U.Prezime</code>, itd.).</li>
+    </ul>
+
+    <h3>Dodatni savet: Kvalifikacija imena objekata</h3>
+    <p>Prefiksovanje imena kolona alijasom tabele (ili punim imenom tabele) naziva se <strong>kvalifikacija imena</strong>. Ovo je još jedna dobra praksa koju ApexSQL Refactor može da automatizuje pomoću funkcije <code>Qualify object names</code>.</p>
+    <p><strong>Zašto je ovo važno?</strong></p>
+    <ul>
+        <li><strong>Čitljivost u složenim upitima:</strong> Kada imate upit sa više <code>JOIN</code> operacija, vrlo je verovatno da će se ista imena kolona pojaviti u više tabela (npr. <code>Ime</code> u tabeli <code>Ucenici</code> i <code>Ime</code> u tabeli <code>Profesori</code>). Bez kvalifikacije, SQL Server će prijaviti grešku "Ambiguous column name".</li>
+        <li><strong>Performanse:</strong> Kada je ime objekta u potpunosti kvalifikovano (uključujući i šemu, npr. <code>dbo.Ucenici</code>), SQL Server ne mora da proverava da li trenutni korisnik poseduje objekat sa tim imenom. On odmah zna gde da ga traži, što štedi resurse.</li>
+    </ul>
+    <p>Funkcije <code>Wildcard expansion</code> i <code>Qualify object names</code> imaju snažnu sinergiju. Često se koriste zajedno kako bi se osigurao najviši kvalitet koda.</p>
+
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 4: Primer 3 (Srednji nivo): Inkapsulacija Logike - Kreiranje Stored Procedure iz Običnog Koda</h2>
+    <p>Kako vaši SQL upiti postaju složeniji, primetićete da se određeni delovi logike ponavljaju na više mesta u aplikaciji. Možda imate kompleksan upit za dohvatanje podataka o učenicima sa najboljim prosekom koji se koristi i na web stranici, i u mobilnoj aplikaciji, i u nedeljnom izveštaju. Kopiranje istog koda na više mesta je recept za katastrofu.</p>
+    <p>Rešenje za ovaj problem je <strong>inkapsulacija</strong> – "pakovanje" vaše SQL logike u ponovno upotrebljive objekte unutar baze podataka, kao što su uskladištene procedure (stored procedures).</p>
+    
+    <h3>Zašto "sakrivati" kod u stored procedure?</h3>
+    <p>Pretvaranje običnog T-SQL koda u uskladištenu proceduru donosi niz fundamentalnih prednosti koje su stub profesionalnog razvoja baza podataka:</p>
+    <ul>
+        <li><strong>Ponovna upotrebljivost (Reusability):</strong> Ovo je primena čuvenog programerskog principa "Don't Repeat Yourself" (DRY). Umesto da se isti kod ponavlja, on se napiše jednom unutar procedure.</li>
+        <li><strong>Održavanje:</strong> Kada se poslovna pravila promene (npr. "odličan uspeh" se sada računa od proseka 4.60 umesto 4.50), promenu pravite na samo jednom mestu – unutar tela procedure.</li>
+        <li><strong>Bezbednost:</strong> Uskladištene procedure su vaša prva linija odbrane protiv SQL Injection napada. Umesto da aplikaciji date direktna prava da čita i piše u vaše tabele, vi joj dajete samo pravo da izvrši određenu proceduru (<code>EXECUTE</code>).</li>
+        <li><strong>Performanse:</strong> Kada se uskladištena procedura izvrši prvi put, SQL Server kreira "plan izvršenja" (execution plan) koji se kešira i ponovo koristi, što izvršavanje čini znatno bržim.</li>
+    </ul>
+    <p>Iako su prednosti ogromne, mnogi početnici zaziru od pisanja procedura. Tu ApexSQL Refactor stupa na scenu, automatizujući 90% posla.</p>
+
+    <h3>Korak po korak: Od skripte do procedure</h3>
+    <p>Recimo da imamo sledeći T-SQL kod koji pronalazi sve učenike čiji je prosek veći od 4.50. Da bismo ovaj kod pretvorili u proceduru:</p>
+    <ol>
+        <li>Selektujte ceo T-SQL blok u SSMS editoru.</li>
+        <li>Iz menija izaberite <code>ApexSQL -> ApexSQL Refactor -> Encapsulate code as... -> Stored Procedure</code>.</li>
+        <li>Otvoriće se dijalog prozor u kojem treba da unesete ime za novu proceduru (npr. <code>usp_GetOdlicneUcenike</code>).</li>
+    </ol>
+
+    <h4>Praktičan primer: Pametno prepoznavanje parametara</h4>
+    <p>Ono što sledi nije samo prosto "pakovanje" koda. ApexSQL Refactor je dovoljno inteligentan da analizira kod koji ste selektovali.</p>
+    <p><strong>Kod PRE (selektovan u editoru):</strong></p>
+    <div class="code-block"><span class="sql-keyword">SELECT</span><br>    UcenikID,<br>    Ime,<br>    Prezime,<br>    Prosek<br><span class="sql-keyword">FROM</span><br>    dbo.Ucenici<br><span class="sql-keyword">WHERE</span><br>    Prosek > <span class="sql-number">4.50</span> <span class="comment">-- Alat će prepoznati ovu vrednost kao kandidata za parametar</span><br><span class="sql-keyword">ORDER BY</span><br>    Prosek DESC;</div>
+    <p class="mt-4"><strong>Akcija i Analiza:</strong> Kada pokrenete <code>Encapsulate code as</code> čarobnjak, on će prepoznati literalnu (hardkodovanu) vrednost <code>4.50</code> u <code>WHERE</code> klauzuli. Umesto da je ostavi takvom, on će vam ponuditi da je pretvorite u ulazni parametar. Ovo je ključni korak koji vašu logiku čini fleksibilnom i ponovno upotrebljivom.</p>
+    <p class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">Ova sposobnost alata da analizira kod i predloži parametre je ono što ga čini izvanrednim alatom za učenje. On vas ne uči samo da "umotate" kod, već vas uči fundamentalnom konceptu <strong>generalizacije</strong> – pisanju fleksibilnog koda koji može da reši čitavu klasu problema, a ne samo jedan specifičan slučaj.</p>
+    <p><strong>Kod POSLE (generisan od strane alata):</strong></p>
+    <div class="code-block"><span class="sql-keyword">CREATE PROCEDURE</span> dbo.usp_GetOdlicneUcenike (<br>    @MinimalniProsek <span class="sql-type">DECIMAL</span>(3, 2)<br>)<br><span class="sql-keyword">AS</span><br><span class="sql-keyword">BEGIN</span><br>    <span class="sql-keyword">SET NOCOUNT ON</span>;<br><br>    <span class="sql-keyword">SELECT</span><br>        UcenikID,<br>        Ime,<br>        Prezime,<br>        Prosek<br>    <span class="sql-keyword">FROM</span><br>        dbo.Ucenici<br>    <span class="sql-keyword">WHERE</span><br>        Prosek > @MinimalniProsek<br>    <span class="sql-keyword">ORDER BY</span><br>        Prosek DESC;<br><span class="sql-keyword">END</span></div>
+    <p class="mt-4">Sada, vašu logiku pozivate jednostavnom komandom:</p>
+    <div class="code-block"><span class="sql-keyword">EXEC</span> dbo.usp_GetOdlicneUcenike @MinimalniProsek = <span class="sql-number">4.50</span>;</div>
+    <p class="mt-2">Ili za drugu vrednost:</p>
+    <div class="code-block"><span class="sql-keyword">EXEC</span> dbo.usp_GetOdlicneUcenike @MinimalniProsek = <span class="sql-number">4.80</span>;</div>
+
+    <h3>Dodatni savet: Inkapsulacija u View ili Funkciju</h3>
+    <p>Ista tehnika se može primeniti i za kreiranje drugih objekata. Ako vaš kod samo čita podatke i ne zahteva parametre, možete ga inkapsulirati kao <strong>View</strong>. View se ponaša kao virtuelna tabela. Ako kod vrši proračun i vraća jednu vrednost, možete ga inkapsulirati kao <strong>skalarnu funkciju</strong>. ApexSQL Refactor podržava sve ove opcije unutar <code>Encapsulate code as...</code> menija.</p>
+
+<h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 5: Primer 4 (Napredni nivo): Refaktorisanje Strukture Baze - Bezbedno Preimenovanje Objekata</h2>
+    <p>Došli smo do najnaprednije i verovatno najvažnije funkcije refaktorisanja – one koja se bavi direktnim izmenama strukture (šeme) baze podataka. Promena imena tabele ili kolone može delovati kao jednostavan zadatak, ali u realnom svetu, to je jedna od najrizičnijih operacija koje programer može da izvede.</p>
+
+    <h3>Zašto je ručno preimenovanje "ruski rulet"?</h3>
+    <p>Baza podataka nije samo kolekcija izolovanih tabela. Ona je složena mreža međusobno povezanih objekata. Ovaj koncept se naziva <strong>zavisnost (dependency)</strong>. Na primer:</p>
+    <ul>
+        <li>Stored procedure zavisi od tabela i kolona koje čita ili u koje upisuje.</li>
+        <li>View zavisi od tabela i kolona iz kojih povlači podatke.</li>
+        <li>Foreign Key ograničenje u jednoj tabeli zavisi od primarnog ključa u drugoj tabeli.</li>
+    </ul>
+    <p>Kada ručno preimenujete kolonu, na primer iz <code>Prosek</code> u <code>ProsecnaOcena</code>, koristeći standardni Object Explorer u SSMS-u, vi menjate samo ime na jednom mestu. Međutim, SQL Server neće automatski pronaći i ažurirati svaki View, proceduru ili funkciju koja je koristila staro ime.</p>
+    <p class="bg-red-100 border-l-4 border-red-400 p-4 rounded-r-lg my-6"><strong>Posledica je katastrofalna.</strong> U trenutku kada aplikacija pokuša da izvrši proceduru koja i dalje traži nepostojeću kolonu <code>Prosek</code>, program će se srušiti sa greškom "Invalid column name".</p>
+    <p>Funkcija <strong>Safe Rename</strong> u ApexSQL Refactor-u rešava ovaj problem tako što preuzima ulogu detektiva. Pre nego što izvrši promenu, ona mapira celu mrežu zavisnosti i automatski generiše skripte za ažuriranje svakog zavisnog objekta.</p>
+
+    <h3>Korak po korak: Hirurška preciznost uz "Safe Rename"</h3>
+    <p>Zamislimo scenario: imamo tabelu <code>Ucenici</code> sa kolonom <code>Prosek</code> i proceduru <code>usp_GetOdlicneUcenike</code> koja koristi tu kolonu. Naš zadatak je da preimenujemo kolonu <code>Prosek</code> u <code>ProsecnaOcena</code>.</p>
+    <ol>
+        <li>U SSMS Object Explorer-u, pronađite tabelu <code>Ucenici</code> i proširite njenu listu kolona.</li>
+        <li>Desni klik na kolonu <code>Prosek</code>.</li>
+        <li>Iz kontekstnog menija izaberite <code>ApexSQL Refactor -> Safe rename</code>.</li>
+        <li>U dijalog prozoru, u polje <strong>New name</strong> unesite <code>ProsecnaOcena</code>.</li>
+        <li>Kliknite na dugme <strong>Preview</strong>.</li>
+    </ol>
+
+    <h4>Praktičan primer: Magija analize zavisnosti</h4>
+    <p>Preview prozor koji se otvara je komandni centar ove operacije. On vam čini vidljivim ono što je inače nevidljivo – skrivene veze između objekata u vašoj bazi.</p>
+    <p><strong>Stanje PRE:</strong></p>
+    <ul>
+        <li>Tabela <code>Ucenici</code> ima kolonu <code>Prosek</code>.</li>
+        <li>Procedura <code>usp_GetOdlicneUcenike</code> sadrži liniju: <code>WHERE Prosek > @MinimalniProsek</code>.</li>
+    </ul>
+
+    <p class="mt-4"><strong>Akcija i Analiza:</strong> Nakon što ste u Preview prozoru pregledali sve zavisnosti i uverili se da je alat sve ispravno detektovao, imate dve opcije:</p>
+    <ul>
+        <li><strong>Create script:</strong> Generiše jednu veliku SQL skriptu koja sadrži i <code>sp_rename</code> i sve potrebne <code>ALTER</code> naredbe.</li>
+        <li><strong>Execute:</strong> Direktno izvršava sve potrebne skripte i primenjuje promenu.</li>
+    </ul>
+
+    <p class="mt-4"><strong>Stanje POSLE:</strong> Nakon izvršenja, dešavaju se dve stvari simultano:</p>
+    <ol>
+        <li>Kolona u tabeli <code>Ucenici</code> je uspešno preimenovana u <code>ProsecnaOcena</code>.</li>
+        <li>Telo procedure <code>usp_GetOdlicneUcenike</code> je automatski izmenjeno i sada sadrži liniju: <code>WHERE ProsecnaOcena > @MinimalniProsek</code>.</li>
+    </ol>
+    <p>Rezultat? Promena je primenjena, a ceo sistem nastavlja da radi bez ikakvih grešaka. Integritet baze podataka je sačuvan.</p>
+
+    <h3>Dodatni savet: Šta sve može "Safe Rename"?</h3>
+    <p>Ova moćna tehnika nije ograničena samo na kolone. Možete je koristiti za bezbedno preimenovanje praktično bilo kog objekta u bazi podataka:</p>
+    <ul>
+        <li>Tabela</li>
+        <li>View-ova</li>
+        <li>Uskladištenih procedura</li>
+        <li>Funkcija</li>
+        <li>Parametara unutar procedura i funkcija</li>
+        <li>Trigera</li>
+    </ul>
+    <p>Svaki put, proces je isti: ApexSQL Refactor će izvršiti dubinsku analizu zavisnosti i osigurati da se promena bezbedno propagira kroz ceo sistem.</p>
+
+     <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Sekcija 6: Zaključak: Put ka Čistijem i Efikasnijem Kodu</h2>
+    <p>Kroz četiri praktična primera, prešli smo put od osnovne higijene koda do naprednih hirurških zahvata na strukturi baze podataka. Svaki korak je predstavljao ne samo učenje nove funkcije u alatu ApexSQL Refactor, već i usvajanje fundamentalnog principa profesionalnog softverskog inženjeringa.</p>
+
+    <h3>Rezime naučenog</h3>
+    <p>Naše putovanje nas je provelo kroz četiri ključna nivoa razvoja veština:</p>
+    <ul>
+        <li><strong>Vizuelna disciplina (Formatiranje):</strong> Naučili smo da čitljivost nije luksuz, već osnova za efikasan rad i saradnju.</li>
+        <li><strong>Pisanje otpornog koda (Proširivanje *):</strong> Shvatili smo da prečice poput <code>SELECT *</code> mogu dovesti do nestabilnosti. Eksplicitnim navođenjem kolona pišemo kod koji je robustan i otporan na buduće promene.</li>
+        <li><strong>Strukturirano programiranje (Inkapsulacija):</strong> Otkrili smo moć "pakovanja" logike u uskladištene procedure, čime smo postigli ponovnu upotrebljivost, bezbednost i lakše održavanje.</li>
+        <li><strong>Bezbedno upravljanje šemom (Bezbedno preimenovanje):</strong> Savladali smo najrizičniji deo posla – izmenu strukture baze. Korišćenjem alata za analizu zavisnosti, naučili smo kako da refaktorišemo šemu sa samopouzdanjem.</li>
+    </ul>
+
+    <h3>Refaktorisanje kao navika, ne kao zadatak</h3>
+    <p>Najvažnija lekcija koju treba poneti iz ovog vodiča je da refaktorisanje nije jednokratna aktivnost. To je stalna praksa, navika koju treba integrisati u svakodnevni rad. Kao što dobar kuvar čisti za sobom dok kuva, tako i dobar programer konstantno unapređuje kod na kojem radi.</p>
+    <p class="bg-yellow-50 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">Preporučuje se da ApexSQL Refactor postane vaš stalni pratilac. Nakon što napišete blok koda, iskoristite <strong>Format SQL</strong>. Pre nego što ga sačuvate, razmislite da li bi trebalo da bude inkapsuliran. Ako primetite loše ime kolone, nemojte ga ignorisati iz straha – iskoristite <strong>Safe Rename</strong>. Vremenom, ove radnje će postati automatske, a kvalitet vašeg koda će eksponencijalno rasti.</p>
+
+    <h3>Šta dalje?</h3>
+    <p>Pokrili smo četiri ključne funkcije, ali ApexSQL Refactor nudi još mnogo toga. Kada se budete osećali sigurno sa onim što ste naučili, evo nekoliko naprednih funkcija koje vredi istražiti:</p>
+    <ul>
+        <li><strong>Split Table:</strong> Omogućava vam da veliku, nezgrapnu tabelu sa mnogo kolona podelite na dve ili više manjih, logički povezanih tabela.</li>
+        <li><strong>Add Surrogate Key:</strong> Automatizuje proces zamene kompleksnog, višedelnog prirodnog ključa sa jednostavnim, jedinstvenim numeričkim (surogat) ključem.</li>
+        <li><strong>Change Parameters:</strong> Omogućava da bezbedno dodajete, uklanjate, preimenujete ili menjate redosled parametara u procedurama i funkcijama, automatski ažurirajući sav kod koji ih poziva.</li>
+    </ul>
+    <p>Ulaganje vremena u učenje i primenu principa čistog koda i refaktorisanja je jedna od najboljih investicija koju možete napraviti za svoju buduću karijeru. Alati poput ApexSQL Refactor-a su tu da taj proces učine lakšim, bržim i bezbednijim. Nastavite da učite, eksperimentišete i, pre svega, pišite kod na koji ćete biti ponosni.</p>
+</section>
+<!-- KRAJ SEKCIJE ZA LEKCIJU 6 -->
+Ovaj kod će ispravno prikazati sav Vaš tekst, uključujući formatirane naslove, liste, <code> tagove, <strong> tagove, <sup> tagove za reference, i naravno, kompletnu tabelu koja se stilski uklapa u ostatak stranice.
 
                         <section id="db-vezbaonica" class="sub-content-section">
                             <h3>SQL Vežbaonica</h3>
