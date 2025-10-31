@@ -729,7 +729,7 @@
                         <a href="#db-lekcija4" class="sub-nav-link block p-2 rounded-lg font-medium">4. Gradimo bazu!</a>
                         <a href="#db-lekcija5" class="sub-nav-link block p-2 rounded-lg font-medium">5. Upiti i Forme</a>
                         <a href="#db-lekcija6" class="sub-nav-link block p-2 rounded-lg font-medium">6. Radionica (ApexSQL)</a>
-                        <a href="#db-vezbaonica" class="sub-nav-link block p-2 rounded-lg font-medium font-bold text-[#795548]">7. SQL Vežbaonica</a>
+                        <a href="#db-vezbaonica" class="sub-nav-link block p-2 rounded-lg font-medium font-bold text-[#795548]">7. Zadaci za vežbanje</a>
                     </nav>
                     <div class="lg:hidden mb-6">
                         <select id="db-mobile-nav" class="w-full mt-4 p-2 border rounded-lg bg-white">
@@ -739,7 +739,7 @@
                             <option value="db-lekcija4">4. Gradimo bazu!</option>
                             <option value="db-lekcija5">5. Upiti i Forme</option>
                             <option value="db-lekcija6">6. Radionica (ApexSQL)</option>
-                            <option value="db-vezbaonica">7. SQL Vežbaonica</option>
+                            <option value="db-vezbaonica">7.  Zadaci za vežbanje</option>
                         </select>
                     </div>
                 </aside>
@@ -1095,23 +1095,115 @@
     <p>Ulaganje vremena u učenje i primenu principa čistog koda i refaktorisanja je jedna od najboljih investicija koju možete napraviti za svoju buduću karijeru. Alati poput ApexSQL Refactor-a su tu da taj proces učine lakšim, bržim i bezbednijim. Nastavite da učite, eksperimentišete i, pre svega, pišite kod na koji ćete biti ponosni.</p>
 </section>
 <!-- KRAJ SEKCIJE ZA LEKCIJU 6 -->
-Ovaj kod će ispravno prikazati sav Vaš tekst, uključujući formatirane naslove, liste, <code> tagove, <strong> tagove, <sup> tagove za reference, i naravno, kompletnu tabelu koja se stilski uklapa u ostatak stranice.
+<section id="db-vezbaonica" class="sub-content-section">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#795548] mb-4">Zadaci za Vežbu: ApexSQL Refactor</h2>
+    <p class="text-base sm:text-lg mb-6">Testirajte svoje znanje kroz sledeće zadatke. Rešenja su sakrivena. Za šifru obratiti se profesoru.</p>
 
-                        <section id="db-vezbaonica" class="sub-content-section">
-                            <h3>SQL Vežbaonica</h3>
-                            <p>Dobrodošli u interaktivnu SQL vežbaonicu! Ovde možete testirati svoje znanje pisanjem pravih SQL upita nad virtuelnom bazom podataka naše biblioteke.</p>
-                            <h4>Dostupne Tabele i Podaci</h4>
-                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-sm"><div><p class="font-bold">Ucenici</p><table><thead><tr class="bg-[#F4F1ED]"><th>UcenikID</th><th>Ime</th><th>Prezime</th><th>Razred</th></tr></thead><tbody><tr><td>1</td><td>Petar</td><td>Petrović</td><td>IV-2</td></tr><tr><td>2</td><td>Jovana</td><td>Jovanović</td><td>III-5</td></tr><tr><td>3</td><td>Marko</td><td>Marković</td><td>IV-2</td></tr></tbody></table></div><div><p class="font-bold">Knjige</p><table><thead><tr class="bg-[#F4F1ED]"><th>KnjigaID</th><th>Naslov</th><th>Autor</th></tr></thead><tbody><tr><td>101</td><td>Ana Karenjina</td><td>Lav Tolstoj</td></tr><tr><td>102</td><td>Na Drini ćuprija</td><td>Ivo Andrić</td></tr><tr><td>103</td><td>Zločin i kazna</td><td>F. Dostojevski</td></tr></tbody></table></div><div><p class="font-bold">Iznajmljivanja</p><table><thead><tr class="bg-[#F4F1ED]"><th>IznajmljivanjeID</th><th>UcenikID</th><th>KnjigaID</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>101</td></tr><tr><td>2</td><td>1</td><td>103</td></tr><tr><td>3</td><td>2</td><td>102</td></tr><tr><td>4</td><td>3</td><td>101</td></tr></tbody></table></div></div>
-                            <h4>Zadaci za Vežbu</h4><ol class="list-decimal list-inside"><li>Prikaži sve podatke o svim učenicima.</li><li>Prikaži samo naslove i autore svih knjiga.</li><li>Pronađi učenika čije je ime 'Jovana'.</li><li>Pronađi sve učenike koji su iz odeljenja 'IV-2'.</li><li>Prikaži imena i prezimena učenika i naslove knjiga koje su pozajmili (koristi JOIN).</li></ol>
-                            <h4>SQL Editor</h4>
-                            <div class="sql-editor-container"><pre><code id="sql-highlighter"></code></pre><textarea id="sql-editor" spellcheck="false" placeholder="Napišite vaš SQL upit ovde... npr. SELECT * FROM Ucenici;"></textarea></div>
-                            <button id="execute-sql-btn" class="w-full mt-4 bg-[#795548] text-white py-2 rounded-lg hover:bg-[#9F8170] transition-colors">Izvrši Upit</button>
-                            <h4>Rezultat</h4><div id="sql-result" class="output-box min-h-[100px] overflow-x-auto">Rezultati će biti prikazani ovde.</div>
-                        </section>
-                    </div>
-                </div>
+    <!-- ZADATAK 1 -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+        <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 1: Formatiranje Koda</h3>
+        <p class="mb-4">Dobili ste sledeći SQL upit od kolege. Upit je funkcionalan, ali je nečitljiv. Vaš zadatak je da opišete korake kako biste, koristeći ApexSQL Refactor, automatski formatirali ovaj kod da bude pregledan i u skladu sa standardima.</p>
+        <p><strong>Kod koji treba formatirati:</strong></p>
+        <div class="code-block"><span class="sql-keyword">select</span> Ime,prezime,prosek <span class="sql-keyword">from</span> dbo.Ucenici <span class="sql-keyword">where</span> prosek>4.0 <span class="sql-keyword">order by</span> Ime</div>
+
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-sql-1">
+            <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+            <div class="flex items-center space-x-2 mt-2">
+                <input type="password" id="password-zadatak-sql-1" class="flex-grow p-2 border border-gray-300 rounded-md" placeholder="Šifra...">
+                <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg" data-solution-id="solution-zadatak-sql-1" data-password-id="password-zadatak-sql-1" data-error-id="error-zadatak-sql-1" data-container-id="unlock-container-sql-1">Otključaj</button>
             </div>
-        </section>
+            <p id="error-zadatak-sql-1" class="text-red-600 font-bold text-sm mt-2 hidden">Pogrešna šifra!</p>
+        </div>
+
+        <div id="solution-zadatak-sql-1" class="hidden mt-6">
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje</h4>
+            <p>Da bi se kod formatirao, potrebno je izvršiti sledeće korake u SSMS-u:</p>
+            <ol class="list-decimal list-inside">
+                <li>Selektovati ceo SQL blok koda.</li>
+                <li>Pritisnuti prečicu na tastaturi: <strong>Ctrl + Shift + Alt + F</strong>.</li>
+                <li>Alternativno, iz menija izabrati <strong>ApexSQL -> ApexSQL Refactor -> Format SQL</strong>.</li>
+            </ol>
+            <p><strong>Rezultat (formatiran kod):</strong></p>
+            <div class="code-block"><span class="sql-keyword">SELECT</span><br>    Ime,<br>    prezime,<br>    prosek<br><span class="sql-keyword">FROM</span><br>    dbo.Ucenici<br><span class="sql-keyword">WHERE</span><br>    prosek > <span class="sql-number">4.0</span><br><span class="sql-keyword">ORDER BY</span><br>    Ime</div>
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Objašnjenje</h4>
+            <p>Ova akcija automatski primenjuje predefinisana pravila formatiranja. Ključne reči (<code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>) su napisane velikim slovima, svaka klauzula je u novom redu, a lista kolona je pregledno odvojena. Ovim se drastično poboljšava čitljivost i održivost koda, što je osnovna disciplina profesionalnog programiranja.</p>
+        </div>
+    </div>
+
+    <!-- ZADATAK 2 -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+        <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 2: Proširivanje Džokera (*)</h3>
+        <p class="mb-4">Dobili ste upit koji koristi zvezdicu (<code>*</code>) za selekciju svih kolona. Iako je ovo brzo za kucanje, predstavlja lošu praksu za produkcioni kod. Opišite kako biste pomoću ApexSQL Refactor-a zamenili zvezdicu eksplicitnom listom kolona i zašto je to važno.</p>
+        <p><strong>Kod koji treba refaktorisati:</strong></p>
+        <div class="code-block"><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> dbo.Ocene;</div>
+
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-sql-2">
+            <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+            <div class="flex items-center space-x-2 mt-2">
+                <input type="password" id="password-zadatak-sql-2" class="flex-grow p-2 border border-gray-300 rounded-md" placeholder="Šifra...">
+                <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg" data-solution-id="solution-zadatak-sql-2" data-password-id="password-zadatak-sql-2" data-error-id="error-zadatak-sql-2" data-container-id="unlock-container-sql-2">Otključaj</button>
+            </div>
+            <p id="error-zadatak-sql-2" class="text-red-600 font-bold text-sm mt-2 hidden">Pogrešna šifra!</p>
+        </div>
+
+        <div id="solution-zadatak-sql-2" class="hidden mt-6">
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje</h4>
+            <p>Koraci za refaktorisanje su:</p>
+            <ol class="list-decimal list-inside">
+                <li>Pozicionirati kursor miša unutar zvezdice (<code>*</code>).</li>
+                <li>Kliknuti desnim tasterom miša.</li>
+                <li>Iz kontekstnog menija izabrati <strong>ApexSQL Refactor -> Wildcard expansion</strong>.</li>
+            </ol>
+            <p><strong>Rezultat (refaktorisan kod):</strong></p>
+            <div class="code-block"><span class="sql-keyword">SELECT</span><br>    O.OcenaID,<br>    O.UcenikID,<br>    O.PredmetID,<br>    O.Ocena,<br>    O.DatumUnosa<br><span class="sql-keyword">FROM</span><br>    dbo.Ocene <span class="sql-keyword">AS</span> O;</div>
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Objašnjenje</h4>
+            <p>Korišćenje <code>SELECT *</code> je rizično iz dva glavna razloga:</p>
+            <ul>
+                <li><strong>Stabilnost:</strong> Ako se u budućnosti doda, obriše ili promeni redosled kolona u tabeli <code>Ocene</code>, aplikacija koja se oslanja na određeni redosled ili broj kolona će prestati da radi. Eksplicitnim navođenjem kolona, naš kod postaje otporan na takve promene.</li>
+                <li><strong>Performanse:</strong> Dohvatamo samo one podatke koji su nam zaista potrebni, smanjujući opterećenje na bazu i mrežu.</li>
+            </ul>
+            <p>ApexSQL Refactor automatski menja <code>*</code> listom svih kolona, dodaje alijas tabeli i kvalifikuje imena kolona, što su sve primeri dobre prakse.</p>
+        </div>
+    </div>
+
+    <!-- ZADATAK 3 -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+        <h3 class="text-xl sm:text-2xl font-semibold text-[#9F8170] mb-4">Zadatak 3: Inkapsulacija Koda</h3>
+        <p class="mb-4">Imate upit koji se često koristi na više mesta u aplikaciji, ali sa različitim vrednostima. Trenutno, vrednost je "hardkodovana". Vaš zadatak je da opišete proces pretvaranja ovog koda u uskladištenu proceduru sa parametrom, koristeći ApexSQL Refactor.</p>
+        <p><strong>Kod koji treba inkapsulirati:</strong></p>
+        <div class="code-block"><span class="sql-keyword">SELECT</span> Ime, Prezime, Prosek <span class="sql-keyword">FROM</span> dbo.Ucenici <span class="sql-keyword">WHERE</span> Prosek > <span class="sql-number">4.50</span>;</div>
+        
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg border" id="unlock-container-sql-3">
+            <h4 class="font-semibold text-gray-800">Prikaži rešenje i analizu</h4>
+            <div class="flex items-center space-x-2 mt-2">
+                <input type="password" id="password-zadatak-sql-3" class="flex-grow p-2 border border-gray-300 rounded-md" placeholder="Šifra...">
+                <button class="show-solution-btn bg-[#795548] text-white py-2 px-4 rounded-lg" data-solution-id="solution-zadatak-sql-3" data-password-id="password-zadatak-sql-3" data-error-id="error-zadatak-sql-3" data-container-id="unlock-container-sql-3">Otključaj</button>
+            </div>
+            <p id="error-zadatak-sql-3" class="text-red-600 font-bold text-sm mt-2 hidden">Pogrešna šifra!</p>
+        </div>
+
+        <div id="solution-zadatak-sql-3" class="hidden mt-6">
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Rešenje</h4>
+            <p>Koraci za inkapsulaciju koda su:</p>
+            <ol class="list-decimal list-inside">
+                <li>Selektovati ceo SQL blok koda.</li>
+                <li>Iz menija izabrati <strong>ApexSQL -> ApexSQL Refactor -> Encapsulate code as... -> Stored Procedure</strong>.</li>
+                <li>U prozoru koji se otvori, uneti ime procedure (npr. <code>usp_GetUceniciPoProseku</code>).</li>
+                <li>Alat će automatski prepoznati hardkodovanu vrednost <code>4.50</code> i ponuditi da je pretvori u parametar. Prihvatiti ovu opciju.</li>
+                <li>Kliknuti na "Execute" ili "Create script".</li>
+            </ol>
+            <p><strong>Rezultat (generisana procedura):</strong></p>
+            <div class="code-block"><span class="sql-keyword">CREATE PROCEDURE</span> dbo.usp_GetUceniciPoProseku (<br>    @MinimalniProsek <span class="sql-type">DECIMAL</span>(3, 2)<br>)<br><span class="sql-keyword">AS</span><br><span class="sql-keyword">BEGIN</span><br>    <span class="sql-keyword">SET NOCOUNT ON</span>;<br><br>    <span class="sql-keyword">SELECT</span><br>        Ime,<br>        Prezime,<br>        Prosek<br>    <span class="sql-keyword">FROM</span><br>        dbo.Ucenici<br>    <span class="sql-keyword">WHERE</span><br>        Prosek > @MinimalniProsek;<br><span class="sql-keyword">END</span></div>
+            <h4 class="text-lg font-semibold text-[#795548] mt-6 mb-2">Objašnjenje</h4>
+            <p>Inkapsulacija koda u uskladištenu proceduru je ključna za:</p>
+            <ul>
+                <li><strong>Ponovnu upotrebljivost:</strong> Istu logiku pozivamo sa različitih mesta samo pozivom procedure (<code>EXEC dbo.usp_GetUceniciPoProseku @MinimalniProsek = 4.80</code>).</li>
+                <li><strong>Održivost:</strong> Ako se logika promeni, menjamo je samo na jednom mestu.</li>
+                <li><strong>Bezbednost:</strong> Aplikacija ne mora imati direktna prava nad tabelom, već samo pravo da izvrši proceduru, što smanjuje rizik od SQL Injection napada.</li>
+            </ul>
+        </div>
+    </div>
+</section>
     
 
 
